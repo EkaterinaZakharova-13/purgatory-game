@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://cjq2u5obxdp2n"]
+
+[ext_resource type="Script" uid="uid://bkhjuv1q4d3lk" path="res://Scripts/level_manager.gd" id="1_nd0gs"]
+
+[node name="LayerManager" type="Node2D" unique_id=530471857]
+script = ExtResource("1_nd0gs")
+
+[node name="Layer3" type="Node2D" parent="." unique_id=297265102]
+
+[node name="Node2D" type="Node2D" parent="Layer3" unique_id=1372760755]
+
+[node name="Node2D2" type="Node2D" parent="Layer3" unique_id=511259891]
+
+[node name="Layer2" type="Node2D" parent="." unique_id=65141107]
+
+[node name="Node2D" type="Node2D" parent="Layer2" unique_id=535172998]
+
+[node name="Node2D2" type="Node2D" parent="Layer2" unique_id=1348645721]
+
+[node name="Layer1" type="Node2D" parent="." unique_id=990853741]
+
+[node name="Node2D" type="Node2D" parent="Layer1" unique_id=1515805810]
+
+[node name="Node2D2" type="Node2D" parent="Layer1" unique_id=1885503077]

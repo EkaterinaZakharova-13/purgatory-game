@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://cjq2u5obxdp2n"]
+
+[ext_resource type="Script" uid="uid://bkhjuv1q4d3lk" path="res://Scripts/level_manager.gd" id="1_nd0gs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_voe2a"]
+size = Vector2(42, 41)
+
+[node name="LayerManager" type="Node2D" unique_id=530471857]
+script = ExtResource("1_nd0gs")
+
+[node name="Layer3" type="Node2D" parent="." unique_id=297265102]
+
+[node name="Node2D" type="Node2D" parent="Layer3" unique_id=1372760755]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Layer3" unique_id=470737754]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Layer3/StaticBody2D" unique_id=404614736]
+position = Vector2(20, 19.5)
+shape = SubResource("RectangleShape2D_voe2a")
+
+[node name="ColorRect" type="ColorRect" parent="Layer3/StaticBody2D" unique_id=866348186]
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(1, 0, 0, 1)
+
+[node name="Layer2" type="Node2D" parent="." unique_id=65141107]
+
+[node name="Node2D" type="Node2D" parent="Layer2" unique_id=535172998]
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Layer2" unique_id=844674537]
+position = Vector2(88, -64)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Layer2/StaticBody2D2" unique_id=377722526]
+position = Vector2(20, 20)
+shape = SubResource("RectangleShape2D_voe2a")
+
+[node name="ColorRect" type="ColorRect" parent="Layer2/StaticBody2D2" unique_id=500034086]
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(1, 0, 0, 1)
+
+[node name="Layer1" type="Node2D" parent="." unique_id=990853741]
+
+[node name="Node2D" type="Node2D" parent="Layer1" unique_id=1515805810]
+
+[node name="Node2D2" type="Node2D" parent="Layer1" unique_id=1885503077]
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Layer1" unique_id=520573640]
+position = Vector2(-104, -16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Layer1/StaticBody2D3" unique_id=939503217]
+position = Vector2(20, 19)
+shape = SubResource("RectangleShape2D_voe2a")
+
+[node name="ColorRect" type="ColorRect" parent="Layer1/StaticBody2D3" unique_id=1708335030]
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(1, 0, 0, 1)
