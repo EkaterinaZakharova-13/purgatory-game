@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://ccnbt8r1lckqy"]
+
+[ext_resource type="Script" uid="uid://dvrw1xw1bihle" path="res://Scripts/player.gd" id="1_cvnsp"]
+[ext_resource type="Texture2D" uid="uid://b7j40ko0swtys" path="res://icon.svg" id="2_nqm6o"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
+size = Vector2(15, 28)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_blnjl"]
+animations = [{
+"frames": [],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": 1,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[node name="Player" type="CharacterBody2D" unique_id=456008934 groups=["Player"]]
+z_as_relative = false
+scale = Vector2(2, 2)
+safe_margin = 0.1
+script = ExtResource("1_cvnsp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2059485190]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_cvnsp")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1779301196]
+position = Vector2(0, -31)
+limit_left = 0
+limit_right = 3840
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=198986597]
+texture_filter = 1
+position = Vector2(0, 1)
+scale = Vector2(0.117187515, 0.21874999)
+sprite_frames = SubResource("SpriteFrames_blnjl")
+animation = &"walk"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1175613169]
+position = Vector2(1.9073486e-06, 1)
+scale = Vector2(0.11718756, 0.21875)
+texture = ExtResource("2_nqm6o")
