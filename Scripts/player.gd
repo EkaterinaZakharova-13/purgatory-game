@@ -12,7 +12,7 @@ extends CharacterBody2D
 @export_group("Jump")
 @export var coyote_time: float = 0.125
 @export var jump_buffer_time: float = 0.125
-@export var jump_strength: float = 400.0
+@export var jump_strength: float = 600.0
 @export var gravity: float = 1800.0
 
 var last_grounded_time := -INF
@@ -31,6 +31,7 @@ func _ready():
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("further"):
 		if current_mask > 1:
+			global_position.y -= 32
 			set_collision_mask_value(current_mask, false)
 			set_collision_mask_value(current_mask-1, true)
 			current_mask -= 1
@@ -38,6 +39,7 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("closer"):
 		if current_mask < layer_manager.layer_size:
+			global_position.y += 32
 			set_collision_mask_value(current_mask, false)
 			set_collision_mask_value(current_mask+1, true)
 			current_mask += 1
