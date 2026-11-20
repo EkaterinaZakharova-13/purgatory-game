@@ -24,6 +24,12 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nqm6o"]
+size = Vector2(14, 44.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_voe2a"]
+size = Vector2(14, 44.5)
+
 [node name="Player" type="CharacterBody2D" unique_id=456008934 groups=["Player"]]
 z_as_relative = false
 scale = Vector2(2, 2)
@@ -47,6 +53,19 @@ sprite_frames = SubResource("SpriteFrames_blnjl")
 animation = &"walk"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1175613169]
-position = Vector2(3.8146973e-06, -13.999999)
+position = Vector2(0, -14)
 scale = Vector2(0.11718756, 0.21875)
 texture = ExtResource("2_nqm6o")
+
+[node name="FurtherCheck" type="Area2D" parent="." unique_id=667690611]
+position = Vector2(0, -24)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FurtherCheck" unique_id=1350116222]
+position = Vector2(0, 1.75)
+shape = SubResource("RectangleShape2D_nqm6o")
+
+[node name="CloserCheck" type="Area2D" parent="." unique_id=878074665]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CloserCheck" unique_id=1223669340]
+position = Vector2(0, -5.75)
+shape = SubResource("RectangleShape2D_voe2a")

@@ -15,7 +15,7 @@ func _ready():
 		for node in layer.get_children():
 			var distance = abs(abs(i)-abs(player.current_mask))
 			
-			node.modulate = Color.from_hsv(ambient_color, 0.0+(float(distance)/10.0), 1.0-(float(distance)/10.0), 1.0)
+			node.modulate = Color.from_hsv(ambient_color, (float(distance)/10.0), 1.0-(float(distance)/10.0), 1.0)
 			
 			if node is CollisionObject2D:
 				node.collision_layer = 0

@@ -189,7 +189,7 @@ scale = Vector2(8, 1)
 color = Color(0.57571715, 0.52621675, 0.5179543, 1)
 metadata/_edit_use_anchors_ = true
 
-[node name="TestObject3" type="StaticBody2D" parent="Layer3" unique_id=1099473262]
+[node name="TestObject3" type="StaticBody2D" parent="Layer3" unique_id=1099473262 groups=["LayerCollider"]]
 position = Vector2(1544, 304)
 metadata/_edit_group_ = true
 
@@ -203,7 +203,7 @@ texture = ExtResource("2_7vt6x")
 region_enabled = true
 region_rect = Rect2(959, 523, 888, 1695)
 
-[node name="TestObject4" type="StaticBody2D" parent="Layer3" unique_id=1855194022]
+[node name="TestObject4" type="StaticBody2D" parent="Layer3" unique_id=1855194022 groups=["LayerCollider"]]
 position = Vector2(1672, 304)
 metadata/_edit_group_ = true
 
@@ -217,7 +217,7 @@ texture = ExtResource("2_7vt6x")
 region_enabled = true
 region_rect = Rect2(959, 523, 888, 1695)
 
-[node name="TestObject5" type="StaticBody2D" parent="Layer3" unique_id=106095752]
+[node name="TestObject5" type="StaticBody2D" parent="Layer3" unique_id=106095752 groups=["LayerCollider"]]
 position = Vector2(2008, 304)
 metadata/_edit_group_ = true
 
@@ -396,7 +396,7 @@ scale = Vector2(8, 1)
 color = Color(0.57571715, 0.52621675, 0.5179543, 1)
 metadata/_edit_use_anchors_ = true
 
-[node name="TestObject2" type="StaticBody2D" parent="Layer2" unique_id=620727525]
+[node name="TestObject2" type="StaticBody2D" parent="Layer2" unique_id=620727525 groups=["LayerCollider"]]
 position = Vector2(1256, 336)
 metadata/_edit_group_ = true
 
@@ -410,7 +410,7 @@ texture = ExtResource("2_7vt6x")
 region_enabled = true
 region_rect = Rect2(959, 523, 888, 1695)
 
-[node name="TestObject3" type="StaticBody2D" parent="Layer2" unique_id=567968814]
+[node name="TestObject3" type="StaticBody2D" parent="Layer2" unique_id=567968814 groups=["LayerCollider"]]
 position = Vector2(1424, 336)
 metadata/_edit_group_ = true
 
@@ -424,7 +424,7 @@ texture = ExtResource("2_7vt6x")
 region_enabled = true
 region_rect = Rect2(959, 523, 888, 1695)
 
-[node name="TestObject4" type="StaticBody2D" parent="Layer2" unique_id=1039773965]
+[node name="TestObject4" type="StaticBody2D" parent="Layer2" unique_id=1039773965 groups=["LayerCollider"]]
 position = Vector2(1808, 336)
 metadata/_edit_group_ = true
 
@@ -458,8 +458,37 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
+offset_left = -3.630371
 offset_right = 47.973
 offset_bottom = 4608.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.4345005, 0.3892141, 0.38226628, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="Layer1/Wall" unique_id=1777888522]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.004787
+offset_top = -4608.0
+offset_right = -0.031787872
+offset_bottom = 4608.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.4345005, 0.3892141, 0.38226628, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="Layer1/Wall" unique_id=82720527]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.004818
+offset_top = 5216.0
+offset_right = -0.03181839
+offset_bottom = 13248.158
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.4345005, 0.3892141, 0.38226628, 1)
@@ -516,11 +545,10 @@ color = Color(0.57571715, 0.52621675, 0.5179543, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="ColorRect2" type="ColorRect" parent="Layer1/Platform2" unique_id=1900223857]
-offset_right = 8.0
-offset_bottom = 64.0
+offset_right = 8.888893
+offset_bottom = 91.42859
 scale = Vector2(8, 1.75)
 color = Color(0.4345005, 0.3892141, 0.38226628, 1)
-metadata/_edit_use_anchors_ = true
 
 [node name="Ground3" type="StaticBody2D" parent="Layer1" unique_id=1059366089]
 position = Vector2(3312, 584)
@@ -556,6 +584,7 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
+offset_left = -3.6303558
 offset_right = 47.973
 offset_bottom = 4608.0
 grow_horizontal = 2
@@ -597,13 +626,13 @@ color = Color(0.57571715, 0.52621675, 0.5179543, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="ColorRect2" type="ColorRect" parent="Layer1/Platform3" unique_id=340139545]
-offset_right = 8.0
-offset_bottom = 64.0
+offset_left = -14.222168
+offset_right = -4.444397
+offset_bottom = 91.42859
 scale = Vector2(8, 1.75)
 color = Color(0.4345005, 0.3892141, 0.38226628, 1)
-metadata/_edit_use_anchors_ = true
 
-[node name="TestObject" type="StaticBody2D" parent="Layer1" unique_id=1379521012]
+[node name="TestObject" type="StaticBody2D" parent="Layer1" unique_id=1379521012 groups=["LayerCollider"]]
 position = Vector2(1304, 368)
 metadata/_edit_group_ = true
 
@@ -617,7 +646,22 @@ texture = ExtResource("2_7vt6x")
 region_enabled = true
 region_rect = Rect2(959, 523, 888, 1695)
 
-[node name="TestObject2" type="StaticBody2D" parent="Layer1" unique_id=1143135879]
+[node name="TestObject4" type="StaticBody2D" parent="Layer1" unique_id=829473261 groups=["LayerCollider"]]
+position = Vector2(1432, 400)
+scale = Vector2(1, 0.40000245)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Layer1/TestObject4" unique_id=949653948]
+shape = SubResource("RectangleShape2D_voe2a")
+
+[node name="Sprite2D" type="Sprite2D" parent="Layer1/TestObject4" unique_id=950447150]
+position = Vector2(-9.536743e-07, 4.4107437e-06)
+scale = Vector2(0.072072074, 0.066076696)
+texture = ExtResource("2_7vt6x")
+region_enabled = true
+region_rect = Rect2(959, 523, 888, 1695)
+
+[node name="TestObject2" type="StaticBody2D" parent="Layer1" unique_id=1143135879 groups=["LayerCollider"]]
 position = Vector2(1544, 368)
 metadata/_edit_group_ = true
 
@@ -631,7 +675,7 @@ texture = ExtResource("2_7vt6x")
 region_enabled = true
 region_rect = Rect2(959, 523, 888, 1695)
 
-[node name="TestObject3" type="StaticBody2D" parent="Layer1" unique_id=1763755582]
+[node name="TestObject3" type="StaticBody2D" parent="Layer1" unique_id=1763755582 groups=["LayerCollider"]]
 position = Vector2(1712, 368)
 metadata/_edit_group_ = true
 

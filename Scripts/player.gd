@@ -1,4 +1,6 @@
 extends CharacterBody2D
+@onready var further_check: Area2D = $FurtherCheck
+@onready var closer_check: Area2D = $CloserCheck
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var layer_manager := get_tree().get_first_node_in_group("LayerManager")
 
@@ -14,6 +16,7 @@ extends CharacterBody2D
 @export var jump_buffer_time: float = 0.125
 @export var jump_strength: float = 600.0
 @export var gravity: float = 1800.0
+@export var jump_cut_multiplier: float = 0.45
 
 var last_grounded_time := -INF
 var last_jump_pressed_time := -INF
@@ -27,23 +30,21 @@ func _ready():
 	_update_z_index()
 	collision_mask = 0
 	set_collision_mask_value(starting_mask, true)
+	
+	further_check.collision_mask = 0
+	further_check.set_collision_mask_value(starting_mask-1, 1)
+	closer_check.collision_mask = 0
+	closer_check.set_collision_mask_value(starting_mask+1, 1)
 
 func _physics_process(delta: float) -> void:
+	print("Object behind player = " + str(has_overlapping_group_body("LayerCollider", further_check)))
+	print("Object in front of player = " + str(has_overlapping_group_body("LayerCollider", closer_check)))
+	
 	if Input.is_action_just_pressed("further"):
-		if current_mask > 1:
-			global_position.y -= 32
-			set_collision_mask_value(current_mask, false)
-			set_collision_mask_value(current_mask-1, true)
-			current_mask -= 1
-			_update_z_index()
+		_move_further()
 
 	if Input.is_action_just_pressed("closer"):
-		if current_mask < layer_manager.layer_size:
-			global_position.y += 32
-			set_collision_mask_value(current_mask, false)
-			set_collision_mask_value(current_mask+1, true)
-			current_mask += 1
-			_update_z_index()
+		_move_closer()
 	
 	var now := Time.get_ticks_msec() / 1000.0
 	var on_floor := is_on_floor()
@@ -100,6 +101,9 @@ func _physics_process(delta: float) -> void:
 		last_grounded_time = -INF
 		last_jump_pressed_time = -INF
 		_play_animation("jump")
+		
+	if Input.is_action_just_released("jump") and velocity.y < 0.0:
+		velocity.y *= jump_cut_multiplier
 
 	move_and_slide()
 
@@ -109,3 +113,33 @@ func _play_animation(animation_name: StringName) -> void:
 
 func _update_z_index() -> void:
 	z_index = current_mask + 1
+
+func _move_further() -> void:
+	if current_mask > 1 and !has_overlapping_group_body("LayerCollider", further_check):
+		collision_mask = 0
+		global_position.y -= 32
+		set_collision_mask_value(current_mask-1, true)
+		current_mask -= 1
+		further_check.collision_mask = 0
+		further_check.set_collision_mask_value(current_mask-1, 1)
+		closer_check.collision_mask = 0
+		closer_check.set_collision_mask_value(current_mask+1, 1)
+		_update_z_index()
+		
+func _move_closer() -> void:
+	if current_mask < layer_manager.layer_size and !has_overlapping_group_body("LayerCollider", closer_check):
+		collision_mask = 0
+		global_position.y += 32
+		set_collision_mask_value(current_mask+1, true)
+		current_mask += 1
+		further_check.collision_mask = 0
+		further_check.set_collision_mask_value(current_mask-1, 1)
+		closer_check.collision_mask = 0
+		closer_check.set_collision_mask_value(current_mask+1, 1)
+		_update_z_index()
+		
+func has_overlapping_group_body(group_name: String, check: Area2D) -> bool:
+	for body in check.get_overlapping_bodies():
+		if body.is_in_group(group_name):
+			return true
+	return false
