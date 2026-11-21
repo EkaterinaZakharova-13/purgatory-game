@@ -37,9 +37,6 @@ func _ready():
 	closer_check.set_collision_mask_value(starting_mask+1, 1)
 
 func _physics_process(delta: float) -> void:
-	print("Object behind player = " + str(has_overlapping_group_body("LayerCollider", further_check)))
-	print("Object in front of player = " + str(has_overlapping_group_body("LayerCollider", closer_check)))
-	
 	if Input.is_action_just_pressed("further"):
 		_move_further()
 
