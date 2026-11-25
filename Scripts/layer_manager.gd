@@ -13,9 +13,9 @@ func _ready():
 		layer.z_as_relative = 0
 		
 		for node in layer.get_children():
-			var distance = abs(abs(i)-abs(player.current_mask))
-			
-			node.modulate = Color.from_hsv(ambient_color, (float(distance)/10.0), 1.0-(float(distance)/10.0), 1.0)
+			#var distance = abs(abs(i)-abs(player.current_mask))
+			#
+			#node.modulate = Color.from_hsv(ambient_color, (float(distance)/10.0), 1.0-(float(distance)/10.0), 1.0)
 			
 			if node is CollisionObject2D:
 				node.collision_layer = 0
@@ -24,36 +24,36 @@ func _ready():
 				pass
 		i += 1
 
-var color_transitioning := false
-
-func _process(delta):
-	if not player:
-		return
-
-	if current_layer != player.current_mask:
-		current_layer = player.current_mask
-		color_transitioning = true
-
-	if color_transitioning:
-		var finished := true
-		var i = 1 # Increments
-
-		for layer in get_children():
-			for node in layer.get_children():
-				var distance = abs(i - player.current_mask)
-
-				var target_color = Color.from_hsv(ambient_color, float(distance) / 10.0, 1.0 - (float(distance) / 10.0), 1.0)
-
-				var weight = 1.0 - exp(-10.0 * delta)
-
-				node.modulate = node.modulate.lerp(target_color, weight)
-
-				if node.modulate != target_color:
-					finished = false
-				else:
-					node.modulate = target_color
-
-			i += 1
-
-		if finished:
-			color_transitioning = false
+#var color_transitioning := false
+#
+#func _process(delta):
+	#if not player:
+		#return
+#
+	#if current_layer != player.current_mask:
+		#current_layer = player.current_mask
+		#color_transitioning = true
+#
+	#if color_transitioning:
+		#var finished := true
+		#var i = 1 # Increments
+#
+		#for layer in get_children():
+			#for node in layer.get_children():
+				#var distance = abs(i - player.current_mask)
+#
+				#var target_color = Color.from_hsv(ambient_color, float(distance) / 10.0, 1.0 - (float(distance) / 10.0), 1.0)
+#
+				#var weight = 1.0 - exp(-10.0 * delta)
+#
+				#node.modulate = node.modulate.lerp(target_color, weight)
+#
+				#if node.modulate != target_color:
+					#finished = false
+				#else:
+					#node.modulate = target_color
+#
+			#i += 1
+#
+		#if finished:
+			#color_transitioning = false

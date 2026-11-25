@@ -37,6 +37,13 @@ func _ready():
 	closer_check.set_collision_mask_value(starting_mask+1, 1)
 
 func _physics_process(delta: float) -> void:
+	if current_mask==3:
+		$Sprite2D.self_modulate=Color.from_hsv(0, 0, 1, 1)
+	elif current_mask==2:
+		$Sprite2D.self_modulate=Color.from_hsv(0, 0, 0.85, 1)
+	elif current_mask==1:
+		$Sprite2D.self_modulate=Color.from_hsv(0, 0, 0.65, 1)
+	
 	if Input.is_action_just_pressed("further"):
 		_move_further()
 
