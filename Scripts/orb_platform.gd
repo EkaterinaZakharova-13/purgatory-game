@@ -1,7 +1,12 @@
 extends StaticBody2D
 
+const GROUND10_SCENE: PackedScene = preload("res://Scenes/Entities/ground_10.tscn")
+
 @export_range(1, 3, 1) var current_layer := 1
 @export_range(0.1, 1.0, 0.05) var stored_orb_scale := 0.5
+@export var ground_parent_path: NodePath
+@export var ground_position := Vector2(1828.8, 584.0)
+@export_range(1, 3, 1) var ground_collision_layer := 3
 
 @onready var interaction_area: Area2D = $InteractionArea
 @onready var visuals: Node2D = $Visuals
@@ -10,10 +15,14 @@ extends StaticBody2D
 var nearby_players: Array[Node2D] = []
 var placed_orb: Node2D
 var brightness_tween: Tween
+var ground_parent: Node2D
+var ground_instance: StaticBody2D
 
 func _ready() -> void:
 	interaction_area.body_entered.connect(_on_body_entered)
 	interaction_area.body_exited.connect(_on_body_exited)
+	if not ground_parent_path.is_empty():
+		ground_parent = get_node_or_null(ground_parent_path) as Node2D
 
 func is_player_in_range(player: Node2D) -> bool:
 	return nearby_players.has(player)
@@ -35,6 +44,7 @@ func interact(player: Node2D, orb: Node2D) -> bool:
 func on_orb_arrived(orb: Node2D) -> void:
 	if placed_orb == orb:
 		_set_occupied(true)
+		_spawn_ground10()
 
 func release_orb(orb: Node2D) -> void:
 	if placed_orb != orb:
@@ -42,8 +52,25 @@ func release_orb(orb: Node2D) -> void:
 
 	placed_orb = null
 	_set_occupied(false)
+	_delete_ground10()
 	if is_instance_valid(orb):
 		orb.call("recall_from_platform", self)
+
+func _spawn_ground10() -> void:
+	if is_instance_valid(ground_instance) or ground_parent == null:
+		return
+	ground_instance = GROUND10_SCENE.instantiate() as StaticBody2D
+	if ground_instance == null:
+		return
+	ground_instance.position = ground_position
+	ground_instance.collision_layer = 1 << (ground_collision_layer - 1)
+	ground_instance.collision_mask = 1
+	ground_parent.add_child(ground_instance)
+
+func _delete_ground10() -> void:
+	if is_instance_valid(ground_instance):
+		ground_instance.queue_free()
+	ground_instance = null
 
 func _set_occupied(occupied: bool) -> void:
 	if brightness_tween and brightness_tween.is_running():

@@ -202,7 +202,7 @@ func _move_further() -> void:
 		carried_crate.call("move_with_player", current_mask, -32.0)
 
 func _move_closer() -> void:
-	if current_mask >= layer_manager.layer_size or has_overlapping_group_body("LayerCollider", closer_check):
+	if current_mask >= layer_manager.layer_size or _is_standing_on_layer_locked_platform() or has_overlapping_group_body("LayerCollider", closer_check):
 		return
 	var target_layer := current_mask + 1
 	var carried_crate := _get_carried_orb_crate()
@@ -219,6 +219,18 @@ func _move_closer() -> void:
 	_update_z_index()
 	if carried_crate != null:
 		carried_crate.call("move_with_player", current_mask, 32.0)
+
+func _is_standing_on_layer_locked_platform() -> bool:
+	if not is_on_floor():
+		return false
+	for collision_index in range(get_slide_collision_count()):
+		var collision := get_slide_collision(collision_index)
+		if collision.get_normal().y > -0.5:
+			continue
+		var floor_body := collision.get_collider() as Node
+		if floor_body != null and floor_body.is_in_group("LayerDownLocked"):
+			return true
+	return false
 
 func _try_push_orb_crate(direction: float) -> void:
 	if is_zero_approx(direction):

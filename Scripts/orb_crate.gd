@@ -69,7 +69,7 @@ func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
 	state.linear_velocity = body_velocity
 
 func interact(player: Node2D, orb: Node2D) -> bool:
-	if not nearby_players.has(player) or current_layer != int(player.get("current_mask")):
+	if not _player_is_in_interaction_range(player) or current_layer != int(player.get("current_mask")):
 		return false
 	if placed_orb != null or not bool(orb.get("is_active")):
 		return false
@@ -79,6 +79,17 @@ func interact(player: Node2D, orb: Node2D) -> bool:
 	orb.call("place_on", orb_anchor, self, Vector2.ONE * stored_orb_scale)
 	orb.global_position = orb_anchor.global_position
 	return true
+
+func _player_is_in_interaction_range(candidate: Node2D) -> bool:
+	var shape_node := interaction_area.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if shape_node == null:
+		return nearby_players.has(candidate)
+	var circle := shape_node.shape as CircleShape2D
+	if circle == null:
+		return nearby_players.has(candidate)
+	var area_scale := interaction_area.global_scale
+	var radius := circle.radius * maxf(absf(area_scale.x), absf(area_scale.y))
+	return interaction_area.global_position.distance_squared_to(candidate.global_position) <= radius * radius
 
 func on_orb_arrived(orb: Node2D) -> void:
 	if placed_orb == orb:
