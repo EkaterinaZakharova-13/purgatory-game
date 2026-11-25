@@ -1,5 +1,8 @@
 extends StaticBody2D
 
+@export_range(1, 3, 1) var current_layer := 1
+@export_range(0.1, 1.0, 0.05) var stored_orb_scale := 0.5
+
 @onready var interaction_area: Area2D = $InteractionArea
 @onready var visuals: Node2D = $Visuals
 @onready var orb_anchor: Marker2D = $OrbAnchor
@@ -18,13 +21,15 @@ func is_player_in_range(player: Node2D) -> bool:
 func interact(player: Node2D, orb: Node2D) -> bool:
 	if not is_player_in_range(player):
 		return false
+	if int(player.get("current_mask")) != current_layer:
+		return false
 	if placed_orb != null:
 		return false
 	if not bool(orb.get("is_active")) or bool(orb.get("is_placing")) or bool(orb.get("is_placed")) or bool(orb.get("is_recalling")):
 		return false
 
 	placed_orb = orb
-	orb.call("place_on", orb_anchor, self)
+	orb.call("place_on", orb_anchor, self, Vector2.ONE * stored_orb_scale)
 	return true
 
 func on_orb_arrived(orb: Node2D) -> void:

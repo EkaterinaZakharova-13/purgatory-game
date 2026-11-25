@@ -13,7 +13,7 @@ size = Vector2(15, 28)
 size = Vector2(14, 44.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_voe2a"]
-size = Vector2(14, 44.5)
+size = Vector2(14, 28)
 
 [sub_resource type="Gradient" id="Gradient_player_glow"]
 offsets = PackedFloat32Array(0, 1)
@@ -110,7 +110,7 @@ shape = SubResource("RectangleShape2D_nqm6o")
 [node name="CloserCheck" type="Area2D" parent="." unique_id=878074665]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CloserCheck" unique_id=1223669340]
-position = Vector2(0, -5.75)
+position = Vector2(0, -14)
 shape = SubResource("RectangleShape2D_voe2a")
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_finished"]

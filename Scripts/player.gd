@@ -25,7 +25,7 @@ const DEPTH_Z_STRIDE := 1024
 @export var stop_threshold: float = 5.0
 
 @export_group("Dash")
-@export_range(1.0, 1.8, 0.05) var dash_speed_multiplier: float = 1.5
+@export_range(1.0, 2.5, 0.05) var dash_speed_multiplier: float = 2.0
 @export_range(0.1, 2.0, 0.1) var dash_duration: float = 0.8
 @export_range(0.1, 10.0, 0.1) var dash_cooldown: float = 3.0
 @export var dash_tint := Color(1.8, 1.6, 1.3, 1.0)

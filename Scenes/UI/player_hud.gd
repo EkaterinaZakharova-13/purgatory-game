@@ -6,7 +6,7 @@ extends Control
 @export var sanity_recovery_delay := 2.0
 @export var recovery_flower_texture: Texture2D
 @export_range(1.0, 1.15) var orb_zoom_multiplier := 1.06
-@export_range(1.0, 1.6) var dash_zoom_multiplier := 1.35
+@export_range(0.75, 1.0) var dash_zoom_multiplier := 0.9
 @export_range(0.0, 0.3) var orb_vignette_strength := 0.16
 @export var screen_effect_smoothing := 8.0
 
@@ -41,7 +41,7 @@ func _on_elapsed_timer_timeout() -> void:
 func _process(delta: float) -> void:
 	var orb_is_active := false
 	var orb_is_placed := false
-	var orb_is_in_crate := false
+	var orb_is_in_holder := false
 	var camera: Camera2D
 	var player := get_tree().get_first_node_in_group("Player")
 	if player != null:
@@ -50,7 +50,7 @@ func _process(delta: float) -> void:
 			orb_is_active = bool(orb.get("is_active"))
 			orb_is_placed = bool(orb.get("is_placed"))
 			var receiver := orb.get("placed_platform") as Node2D
-			orb_is_in_crate = orb_is_placed and receiver != null and receiver.is_in_group("OrbCrates")
+			orb_is_in_holder = orb_is_placed and receiver != null and (receiver.is_in_group("OrbCrates") or receiver.is_in_group("OrbPlatforms"))
 		camera = player.get_node_or_null("Camera2D") as Camera2D
 
 	var dash_is_active := player != null and float(player.get("dash_duration_remaining")) > 0.0
@@ -60,7 +60,7 @@ func _process(delta: float) -> void:
 	if orb_is_placed:
 		time_since_orb_removed = 0.0
 		if sanity > 0.0:
-			var drain_rate: float = crate_sanity_drain_per_second if orb_is_in_crate else orb_sanity_drain_per_second
+			var drain_rate: float = crate_sanity_drain_per_second if orb_is_in_holder else orb_sanity_drain_per_second
 			sanity = maxf(0.0, sanity - drain_rate * delta)
 			sanity_is_changing = true
 			flower_particles.texture = depletion_flower_texture
@@ -101,10 +101,10 @@ func _update_screen_effects(delta: float, orb_is_active: bool, dash_is_active: b
 		camera_zoom_initialized = true
 
 	var target_zoom_multiplier := 1.0
-	if orb_is_active:
-		target_zoom_multiplier = maxf(target_zoom_multiplier, orb_zoom_multiplier)
 	if dash_is_active:
-		target_zoom_multiplier = maxf(target_zoom_multiplier, dash_zoom_multiplier)
+		target_zoom_multiplier = dash_zoom_multiplier
+	elif orb_is_active:
+		target_zoom_multiplier = orb_zoom_multiplier
 	var target_zoom := normal_camera_zoom * target_zoom_multiplier
 	camera.zoom = camera.zoom.lerp(target_zoom, blend)
 

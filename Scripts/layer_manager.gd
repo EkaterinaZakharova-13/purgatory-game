@@ -8,12 +8,13 @@ const DEPTH_Z_STRIDE := 1024
 @export_range(0, 1, 0.01) var ambient_color := 0.0
 
 func _ready():
-	var i = 1 # Increments
+	var i := 1
 	for layer in get_children():
-		layer.z_index = i * DEPTH_Z_STRIDE
+		var layer_number := _collision_layer_for_name(String(layer.name), i)
+		layer.z_index = layer_number * DEPTH_Z_STRIDE
 		layer.z_as_relative = false
 		for node in layer.get_children():
-			var distance = abs(i - player.current_mask)
+			var distance: int = absi(layer_number - player.current_mask)
 			var canvas_item := node as CanvasItem
 			if canvas_item != null:
 				canvas_item.modulate = Color.from_hsv(ambient_color, float(distance) / 10.0, 1.0 - (float(distance) / 10.0), 1.0)
@@ -26,8 +27,15 @@ func _ready():
 						canvas_item.z_index = 0
 			if node is CollisionObject2D:
 				node.collision_layer = 0
-				node.set_collision_layer_value(i, 1)
+				node.set_collision_layer_value(layer_number, true)
 		i += 1
+
+func _collision_layer_for_name(layer_name: String, fallback: int) -> int:
+	match layer_name:
+		"Layer3": return 1
+		"Layer2": return 2
+		"Layer1": return 3
+		_: return fallback
 
 func _depth_y(node: Node2D) -> float:
 	var collision_shape := node.get_node_or_null("CollisionShape2D") as CollisionShape2D
@@ -59,7 +67,8 @@ func _process(delta):
 		var i = 1 # Increments
 		for layer in get_children():
 			for node in layer.get_children():
-				var distance = abs(i - player.current_mask)
+				var layer_number := _collision_layer_for_name(String(layer.name), i)
+				var distance: int = absi(layer_number - player.current_mask)
 				var target_color = Color.from_hsv(ambient_color, float(distance) / 10.0, 1.0 - (float(distance) / 10.0), 1.0)
 				var weight = 1.0 - exp(-10.0 * delta)
 				var canvas_item := node as CanvasItem

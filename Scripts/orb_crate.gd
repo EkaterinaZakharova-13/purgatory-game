@@ -127,7 +127,7 @@ func _apply_layer(layer_number: int) -> void:
 	current_layer = layer_number
 	var layer_bit := 1 << (current_layer - 1)
 	collision_layer = layer_bit
-	collision_mask = layer_bit
+	collision_mask = layer_bit | 1
 	z_index = clampi(current_layer * DEPTH_Z_STRIDE + roundi(global_position.y + 16.0), -4096, 4096)
 
 func _on_body_entered(body: Node2D) -> void:
