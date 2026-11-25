@@ -1,0 +1,56 @@
+extends StaticBody2D
+
+@onready var interaction_area: Area2D = $InteractionArea
+@onready var visuals: Node2D = $Visuals
+@onready var orb_anchor: Marker2D = $OrbAnchor
+
+var nearby_players: Array[Node2D] = []
+var placed_orb: Node2D
+var brightness_tween: Tween
+
+func _ready() -> void:
+	interaction_area.body_entered.connect(_on_body_entered)
+	interaction_area.body_exited.connect(_on_body_exited)
+
+func is_player_in_range(player: Node2D) -> bool:
+	return nearby_players.has(player)
+
+func interact(player: Node2D, orb: Node2D) -> bool:
+	if not is_player_in_range(player):
+		return false
+	if placed_orb != null:
+		return false
+	if not bool(orb.get("is_active")) or bool(orb.get("is_placing")) or bool(orb.get("is_placed")) or bool(orb.get("is_recalling")):
+		return false
+
+	placed_orb = orb
+	orb.call("place_on", orb_anchor, self)
+	return true
+
+func on_orb_arrived(orb: Node2D) -> void:
+	if placed_orb == orb:
+		_set_occupied(true)
+
+func release_orb(orb: Node2D) -> void:
+	if placed_orb != orb:
+		return
+
+	placed_orb = null
+	_set_occupied(false)
+	if is_instance_valid(orb):
+		orb.call("recall_from_platform", self)
+
+func _set_occupied(occupied: bool) -> void:
+	if brightness_tween and brightness_tween.is_running():
+		brightness_tween.kill()
+	brightness_tween = create_tween()
+	brightness_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	var target_color := Color(1.14, 1.08, 0.94, 1.0) if occupied else Color.WHITE
+	brightness_tween.tween_property(visuals, "modulate", target_color, 0.22)
+
+func _on_body_entered(body: Node2D) -> void:
+	if body.is_in_group("Player") and not nearby_players.has(body):
+		nearby_players.append(body)
+
+func _on_body_exited(body: Node2D) -> void:
+	nearby_players.erase(body)

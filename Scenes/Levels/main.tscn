@@ -2,6 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://ccnbt8r1lckqy" path="res://Scenes/Entities/player.tscn" id="2_u872a"]
 [ext_resource type="Script" uid="uid://bkhjuv1q4d3lk" path="res://Scripts/layer_manager.gd" id="2_yjsus"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/orb_crate.tscn" id="3_crate"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/player_hud.tscn" id="4_hud"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rtip2"]
 size = Vector2(4, 16)
@@ -49,6 +51,20 @@ color = Color(0.23546666, 0.4139393, 0.3771598, 1)
 
 [node name="Player" parent="." unique_id=456008934 instance=ExtResource("2_u872a")]
 position = Vector2(560, 440)
+
+[node name="OrbCrate" parent="." instance=ExtResource("3_crate")]
+position = Vector2(850, 536)
+current_layer = 2
+
+[node name="OrbCrate2" parent="." instance=ExtResource("3_crate")]
+position = Vector2(1626, 536)
+current_layer = 2
+
+[node name="OrbCrate3" parent="." instance=ExtResource("3_crate")]
+position = Vector2(2025, 536)
+current_layer = 2
+
+[node name="PlayerHUD" parent="." instance=ExtResource("4_hud")]
 
 [node name="LayerManager" type="Node2D" parent="." unique_id=530471857 groups=["LayerManager"]]
 script = ExtResource("2_yjsus")
