@@ -233,10 +233,11 @@ position = Vector2(2263, 250)
 position = Vector2(158, 49)
 shape = SubResource("Ground9SupportShape")
 
-[node name="Ground10SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=1912363485 groups=["LayerDownLocked"]]
+[node name="Ground10SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=1912363485 groups=["LayerDownLocked", "Ground10Support"]]
 position = Vector2(1563, 329)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer3/Ground10SupportPlatform" unique_id=1913531953]
+disabled = true
 position = Vector2(35.000023, 53)
 shape = SubResource("Ground10SupportShape")
 
@@ -471,11 +472,12 @@ position = Vector2(2267, 280)
 position = Vector2(159, 48)
 shape = SubResource("Ground9SupportShape")
 
-[node name="Ground10SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=8577493 groups=["LayerDownLocked"]]
+[node name="Ground10SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=8577493 groups=["LayerDownLocked", "Ground10Support"]]
 position = Vector2(1563, 361)
 collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer2/Ground10SupportPlatform" unique_id=361985336]
+disabled = true
 position = Vector2(35.000023, 53)
 shape = SubResource("Ground10SupportShape")
 
