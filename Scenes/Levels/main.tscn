@@ -196,7 +196,7 @@ scale = Vector2(0.58, 0.58)
 position = Vector2(1826.9999, 483.99997)
 scale = Vector2(0.58, 0.58)
 ground_parent_path = NodePath("../../Layer1")
-ground_position = Vector2(1563, 393)
+ground_position = Vector2(1563, 388)
 
 [node name="Ground6SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=1091602071 groups=["LayerDownLocked"]]
 position = Vector2(1655, 329)
