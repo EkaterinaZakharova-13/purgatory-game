@@ -1,5 +1,8 @@
 extends StaticBody2D
 
+signal orb_placed
+signal orb_recalled
+
 const GROUND10_SCENE: PackedScene = preload("res://Scenes/Entities/ground_10.tscn")
 
 @export_range(1, 3, 1) var current_layer := 1
@@ -45,6 +48,7 @@ func on_orb_arrived(orb: Node2D) -> void:
 	if placed_orb == orb:
 		_set_occupied(true)
 		_spawn_ground10()
+		orb_placed.emit()
 
 func release_orb(orb: Node2D) -> void:
 	if placed_orb != orb:
@@ -52,12 +56,16 @@ func release_orb(orb: Node2D) -> void:
 
 	placed_orb = null
 	_set_occupied(false)
-	_delete_ground10()
+	_set_ground10_active(false)
+	orb_recalled.emit()
 	if is_instance_valid(orb):
 		orb.call("recall_from_platform", self)
 
 func _spawn_ground10() -> void:
-	if is_instance_valid(ground_instance) or ground_parent == null:
+	if ground_parent == null:
+		return
+	if is_instance_valid(ground_instance):
+		_set_ground10_active(true)
 		return
 	ground_instance = GROUND10_SCENE.instantiate() as StaticBody2D
 	if ground_instance == null:
@@ -66,12 +74,21 @@ func _spawn_ground10() -> void:
 	ground_instance.collision_layer = 1 << (ground_collision_layer - 1)
 	ground_instance.collision_mask = 1
 	ground_parent.add_child(ground_instance)
+	_set_ground10_active(true)
 
-func _delete_ground10() -> void:
+func _set_ground10_active(active: bool) -> void:
 	if is_instance_valid(ground_instance):
-		ground_instance.queue_free()
-	ground_instance = null
+		ground_instance.visible = active
+		var collision_shape := ground_instance.get_node_or_null("CollisionShape2D") as CollisionShape2D
+		if collision_shape != null:
+			collision_shape.set_deferred("disabled", not active)
+	_set_ground10_support_collisions(active)
 
+func _set_ground10_support_collisions(active: bool) -> void:
+	for support in get_tree().get_nodes_in_group("Ground10Support"):
+		var collision_shape := support.get_node_or_null("CollisionShape2D") as CollisionShape2D
+		if collision_shape != null:
+			collision_shape.set_deferred("disabled", not active)
 func _set_occupied(occupied: bool) -> void:
 	if brightness_tween and brightness_tween.is_running():
 		brightness_tween.kill()

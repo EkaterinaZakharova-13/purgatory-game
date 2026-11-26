@@ -3,6 +3,7 @@ extends RigidBody2D
 const DEPTH_Z_STRIDE := 1024
 
 @export_range(1, 3, 1) var current_layer := 2
+@export var match_player_layer_on_interact := false
 @export var push_force := 1450.0
 @export var max_push_speed := 150.0
 @export var idle_braking_strength := 1300.0
@@ -31,6 +32,8 @@ func _ready() -> void:
 	linear_damp = 1.0
 	continuous_cd = RigidBody2D.CCD_MODE_CAST_SHAPE
 	z_as_relative = false
+	# Keep the F-key interaction range the same when an individual crate is scaled.
+	interaction_area.global_scale = Vector2.ONE
 	_layer_rest_y = global_position.y
 	_apply_layer(current_layer)
 	interaction_area.body_entered.connect(_on_body_entered)
@@ -46,10 +49,15 @@ func _process(delta: float) -> void:
 	modulate = modulate.lerp(target_tint, 1.0 - exp(-10.0 * delta))
 
 func can_be_pushed() -> bool:
-	return _orb_has_arrived and is_instance_valid(placed_orb)
+	return (
+		_orb_has_arrived
+		and is_instance_valid(placed_orb)
+		and bool(placed_orb.get("is_placed"))
+		and placed_orb.get("placed_platform") == self
+	)
 
-func receive_push(direction: float) -> void:
-	if not can_be_pushed() or not is_equal_approx(absf(direction), 1.0):
+func receive_push(direction: float, pushing_layer: int, pusher_y: float) -> void:
+	if pushing_layer != current_layer or pusher_y > global_position.y + 24.0 or not can_be_pushed() or not is_equal_approx(absf(direction), 1.0):
 		return
 	apply_central_force(Vector2(direction * push_force, 0.0))
 	_push_force_received = true
@@ -69,12 +77,17 @@ func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
 	state.linear_velocity = body_velocity
 
 func interact(player: Node2D, orb: Node2D) -> bool:
-	if not _player_is_in_interaction_range(player) or current_layer != int(player.get("current_mask")):
+	if not _player_is_in_interaction_range(player) or player.global_position.y > global_position.y + 24.0:
 		return false
 	if placed_orb != null or not bool(orb.get("is_active")):
 		return false
 	if bool(orb.get("is_placing")) or bool(orb.get("is_placed")) or bool(orb.get("is_recalling")):
 		return false
+	var player_layer := int(player.get("current_mask"))
+	if current_layer != player_layer:
+		if not match_player_layer_on_interact:
+			return false
+		_apply_layer(player_layer)
 	placed_orb = orb
 	orb.call("place_on", orb_anchor, self, Vector2.ONE * stored_orb_scale)
 	orb.global_position = orb_anchor.global_position

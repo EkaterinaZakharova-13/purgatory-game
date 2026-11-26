@@ -18,6 +18,7 @@ extends Control
 @onready var vignette_material: ShaderMaterial = $"../Vignette".material as ShaderMaterial
 @onready var elapsed_time_label: Label = $"../ElapsedTime"
 @onready var elapsed_timer: Timer = $ElapsedTimer
+@onready var damage_outline: ColorRect = $"../DamageOutline"
 
 var sanity := 100.0
 var health := 100.0
@@ -27,12 +28,14 @@ var normal_camera_zoom := Vector2.ONE
 var camera_zoom_initialized := false
 var current_vignette_strength := 0.0
 var elapsed_seconds := 0
+var damage_outline_tween: Tween
 
 func _ready() -> void:
 	var player := get_tree().get_first_node_in_group("Player")
 	if player != null and player.has_signal("damaged_percent"):
 		player.connect("damaged_percent", _on_player_damaged_percent)
 	health = max_health
+	damage_outline.material.set_shader_parameter("strength", 0.0)
 	depletion_flower_texture = flower_particles.texture
 	flower_particles.emitting = false
 	_update_sanity_fill()
@@ -42,9 +45,20 @@ func _ready() -> void:
 	elapsed_timer.start()
 
 func _on_player_damaged_percent(percent: float) -> void:
+	_flash_damage_outline()
 	var damage_amount := max_health * clampf(percent, 0.0, 100.0) / 100.0
 	health = maxf(0.0, health - damage_amount)
 	_update_health_bar()
+
+func _flash_damage_outline() -> void:
+	if damage_outline_tween != null and damage_outline_tween.is_running():
+		damage_outline_tween.kill()
+	damage_outline.material.set_shader_parameter("strength", 1.0)
+	damage_outline_tween = create_tween()
+	damage_outline_tween.tween_method(_set_damage_outline_strength, 1.0, 0.0, 0.4)
+
+func _set_damage_outline_strength(value: float) -> void:
+	damage_outline.material.set_shader_parameter("strength", value)
 
 func _on_elapsed_timer_timeout() -> void:
 	elapsed_seconds += 1

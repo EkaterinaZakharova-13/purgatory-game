@@ -9,7 +9,7 @@ radius = 190.0
 [sub_resource type="CircleShape2D" id="BiteCircle"]
 radius = 54.0
 
-[node name="TheHunter" type="Node2D" unique_id=1648377916 groups=["LayerCollider"]]
+[node name="TheHunter" type="Node2D" unique_id=1648377916 groups=[]]
 script = ExtResource("1_script")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2076656852]

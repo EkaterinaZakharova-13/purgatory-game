@@ -20,7 +20,7 @@ const DEPTH_Z_STRIDE := 1024
 @onready var layer_manager := get_tree().get_first_node_in_group("LayerManager")
 
 @export_group("Movement")
-@export var max_speed: float = 240.0
+@export var max_speed: float = 220.0
 @export var acceleration: float = 1800.0
 @export_range(0.0, 1.0) var ground_friction: float = 0.45
 @export var ground_braking: float = 3000.0
@@ -39,23 +39,40 @@ const DEPTH_Z_STRIDE := 1024
 @export var gravity: float = 1800.0
 @export var jump_cut_multiplier: float = 0.45
 
+@export_group("Damage recoil")
+@export_range(0.0, 1.0, 0.05) var damage_recoil_duration := 0.18
+@export var damage_recoil_horizontal_speed := 145.0
+@export var damage_recoil_bounce_speed := 95.0
+
 var last_grounded_time := -INF
 var last_jump_pressed_time := -INF
 var dash_duration_remaining := 0.0
 var dash_cooldown_remaining := 0.0
+var damage_recoil_remaining := 0.0
+var current_damage_recoil_strength := 1.0
 var original_sprite_modulate := Color.WHITE
 
 var starting_mask: int = 2
+var starting_position := Vector2.ZERO
 var current_mask := starting_mask
 
 var last_direction := 1
 
-func take_damage_percent(percent: float) -> void:
+func take_damage_percent(percent: float, source_position: Vector2 = Vector2.INF, recoil_multiplier: float = 1.0) -> void:
 	if percent <= 0.0:
 		return
 	damaged_percent.emit(percent)
+	var recoil_strength := clampf(recoil_multiplier, 0.0, 1.0)
+	var knockback_direction := signf(global_position.x - source_position.x) if source_position != Vector2.INF else -float(last_direction)
+	if is_zero_approx(knockback_direction):
+		knockback_direction = -float(last_direction)
+	current_damage_recoil_strength = recoil_strength
+	velocity.x = knockback_direction * damage_recoil_horizontal_speed * recoil_strength
+	velocity.y = minf(velocity.y, -damage_recoil_bounce_speed * recoil_strength)
+	damage_recoil_remaining = damage_recoil_duration * recoil_strength
 
 func _ready():
+	starting_position = global_position
 	original_sprite_modulate = animated_sprite.modulate
 	walking_dust.emitting = false
 	_update_z_index()
@@ -70,9 +87,32 @@ func _ready():
 	closer_check.collision_mask = 0
 	closer_check.set_collision_mask_value(starting_mask+1, 1)
 
+func respawn_at_start() -> void:
+	if orb.is_placing or orb.is_placed:
+		orb.call_back()
+	global_position = starting_position
+	velocity = Vector2.ZERO
+	current_mask = starting_mask
+	collision_mask = 0
+	set_collision_mask_value(starting_mask, true)
+	further_check.collision_mask = 0
+	if current_mask > 1:
+		further_check.set_collision_mask_value(current_mask - 1, true)
+	closer_check.collision_mask = 0
+	if current_mask < layer_manager.layer_size:
+		closer_check.set_collision_mask_value(current_mask + 1, true)
+	dash_duration_remaining = 0.0
+	animated_sprite.modulate = original_sprite_modulate
+	walking_dust.emitting = false
+	last_grounded_time = -INF
+	last_jump_pressed_time = -INF
+	_update_z_index()
+	_play_animation(ANIM_IDLE)
+
 func _physics_process(delta: float) -> void:
 	dash_duration_remaining = maxf(0.0, dash_duration_remaining - delta)
 	dash_cooldown_remaining = maxf(0.0, dash_cooldown_remaining - delta)
+	damage_recoil_remaining = maxf(0.0, damage_recoil_remaining - delta)
 	if Input.is_action_just_pressed("dash") and dash_cooldown_remaining <= 0.0:
 		dash_duration_remaining = dash_duration
 		dash_cooldown_remaining = dash_cooldown
@@ -102,7 +142,9 @@ func _physics_process(delta: float) -> void:
 	if not was_on_floor:
 		velocity.y += gravity * delta
 
-	if direction != 0.0:
+	if damage_recoil_remaining > 0.0:
+		velocity.x = move_toward(velocity.x, 0.0, damage_recoil_horizontal_speed * 0.55 * current_damage_recoil_strength * delta)
+	elif direction != 0.0:
 		var reversing_on_ground := (
 			was_on_floor
 			and velocity.x != 0.0
@@ -248,7 +290,7 @@ func _try_push_orb_crate(direction: float) -> void:
 		if crate == null or not crate.is_in_group("OrbCrates"):
 			continue
 		if collision.get_normal().x * direction < -0.5:
-			crate.call("receive_push", signf(direction))
+			crate.call("receive_push", signf(direction), current_mask, global_position.y)
 
 func _get_carried_orb_crate() -> Node2D:
 	if not bool(orb.get("is_placed")) and not bool(orb.get("is_placing")):

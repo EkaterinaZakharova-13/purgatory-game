@@ -30,8 +30,11 @@ const ANIM_BITE: StringName = &"TheHunterBite"
 	8.7, 22.4, 22.4, 0.0, 0.0, 0.0
 ])
 
+@export var activation_platform_path: NodePath
+
 @export_group("Attack")
-@export_range(0.0, 100.0, 0.5) var bite_damage_percent := 5.0
+@export_range(0.0, 100.0, 0.5) var bite_damage_percent := 7.0
+@export_range(0.0, 1.0, 0.05) var damage_recoil_multiplier := 1.0
 @export_range(0.1, 10.0, 0.1) var attack_cooldown := 1.5
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -55,6 +58,32 @@ func _ready() -> void:
 	animated_sprite.frame_changed.connect(_apply_frame_alignment)
 	_apply_frame_alignment()
 	animated_sprite.play(ANIM_SPIKE)
+	if not activation_platform_path.is_empty():
+		visible = false
+		detection_area.monitoring = false
+		bite_area.monitoring = false
+		set_physics_process(false)
+		var platform := get_node_or_null(activation_platform_path)
+		if platform != null and platform.has_signal("orb_placed"):
+			platform.connect("orb_placed", _on_orb_platform_placed)
+		else:
+			push_warning("Hunter activation platform was not found: %s" % activation_platform_path)
+
+func _on_orb_platform_placed() -> void:
+	if visible:
+		return
+	visible = true
+	detection_area.monitoring = true
+	bite_area.monitoring = true
+	_jump_form_active = true
+	_jump_sequence_completed = false
+	_is_reversing_jump = false
+	_bite_animation_playing = false
+	_attack_cooldown_remaining = 0.0
+	_return_timer_remaining = -1.0
+	animated_sprite.play(ANIM_JUMP)
+	_apply_frame_alignment()
+	set_physics_process(true)
 
 func _physics_process(delta: float) -> void:
 	_attack_cooldown_remaining = maxf(0.0, _attack_cooldown_remaining - delta)
@@ -115,16 +144,22 @@ func _player_is_in_area(area: Area2D) -> bool:
 
 func _start_bite() -> void:
 	_bite_animation_playing = true
-	_attack_cooldown_remaining = attack_cooldown
 	if animated_sprite.animation == ANIM_JUMP:
 		_jump_resume_frame = animated_sprite.frame
 		_jump_resume_progress = animated_sprite.frame_progress
 	animated_sprite.play(ANIM_BITE)
-	_apply_bite_damage()
+	if _apply_bite_damage():
+		_attack_cooldown_remaining = attack_cooldown
+	else:
+		_bite_animation_playing = false
 
-func _apply_bite_damage() -> void:
-	if player.has_method("take_damage_percent"):
-		player.call("take_damage_percent", bite_damage_percent)
+func _apply_bite_damage() -> bool:
+	var hit_player := get_tree().get_first_node_in_group("Player") as Node2D
+	if not is_instance_valid(hit_player) or not hit_player.has_method("take_damage_percent"):
+		return false
+	player = hit_player
+	hit_player.call("take_damage_percent", bite_damage_percent, global_position, damage_recoil_multiplier)
+	return true
 
 func _restore_form_after_bite() -> void:
 	if not _jump_form_active:

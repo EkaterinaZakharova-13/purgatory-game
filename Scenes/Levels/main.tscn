@@ -6,12 +6,21 @@
 [ext_resource type="PackedScene" path="res://Scenes/UI/player_hud.tscn" id="4_hud"]
 [ext_resource type="PackedScene" path="res://Scenes/Entities/orb_platform.tscn" id="5_platform"]
 [ext_resource type="PackedScene" uid="uid://cuixeh0uak6yi" path="res://Scenes/Entities/the_hunter.tscn" id="6_hunter"]
+[ext_resource type="Script" uid="uid://b2g57ekc2hpvt" path="res://Scenes/Levels/area_2d.gd" id="6_w0lsm"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/escape_door.tscn" id="7_escape_door"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/pressure_plate.tscn" id="8_pressure_plate"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rtip2"]
 size = Vector2(4, 32)
 
 [sub_resource type="RectangleShape2D" id="SupportShapeSmall"]
 size = Vector2(74.00002, 33.5)
+
+[sub_resource type="RectangleShape2D" id="EscapeGateCollision"]
+size = Vector2(72, 91.63635)
+
+[sub_resource type="RectangleShape2D" id="Ground10LeftSupportShape"]
+size = Vector2(108.8, 33.5)
 
 [sub_resource type="RectangleShape2D" id="Ground9SupportShape"]
 size = Vector2(138.75, 33.5)
@@ -21,6 +30,9 @@ size = Vector2(67.2, 32)
 
 [sub_resource type="RectangleShape2D" id="SupportShapeWide"]
 size = Vector2(143.36, 32)
+
+[sub_resource type="RectangleShape2D" id="FallResetShape"]
+size = Vector2(1800, 32)
 
 [node name="Main" type="Node" unique_id=767089903]
 
@@ -72,6 +84,12 @@ position = Vector2(850, 504)
 
 [node name="OrbCrate2" parent="." unique_id=1708099566 instance=ExtResource("3_crate")]
 position = Vector2(3224, 504)
+
+[node name="OrbCrate3" parent="." unique_id=2134492367 instance=ExtResource("3_crate")]
+position = Vector2(1476, 321.2)
+scale = Vector2(0.8, 0.8)
+current_layer = 3
+match_player_layer_on_interact = true
 
 [node name="PlayerHUD" parent="." unique_id=1759663052 instance=ExtResource("4_hud")]
 
@@ -190,6 +208,15 @@ position = Vector2(2494, 520)
 position = Vector2(38.0001, 17)
 shape = SubResource("SupportShapeSmall")
 
+[node name="EscapeGateBlockerL3" type="AnimatableBody2D" parent="LayerManager/Layer3" unique_id=786950872 groups=["EscapeGateBlockers"]]
+position = Vector2(2697, 295.5)
+scale = Vector2(1.375, 1.375)
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer3/EscapeGateBlockerL3" unique_id=1757772001]
+position = Vector2(0, 70)
+shape = SubResource("EscapeGateCollision")
+
 [node name="OrbPlatform" parent="LayerManager/Layer3" unique_id=252267087 instance=ExtResource("5_platform")]
 position = Vector2(2473, 278)
 scale = Vector2(0.58, 0.58)
@@ -214,6 +241,13 @@ position = Vector2(1795, 302)
 position = Vector2(37.999977, 48)
 shape = SubResource("SupportShapeSmall")
 
+[node name="Ground10LeftSupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=2134492365 groups=["LayerDownLocked"]]
+position = Vector2(1409.2, 302)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer3/Ground10LeftSupportPlatform" unique_id=2134492366]
+position = Vector2(54.4, 48)
+shape = SubResource("Ground10LeftSupportShape")
+
 [node name="Ground8SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=387956634 groups=["LayerDownLocked"]]
 position = Vector2(1935, 275)
 
@@ -235,16 +269,27 @@ position = Vector2(2263, 250)
 position = Vector2(158, 49)
 shape = SubResource("Ground9SupportShape")
 
-[node name="Ground10SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=1912363485 groups=["LayerDownLocked"]]
+[node name="Ground10SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=1912363485 groups=["Ground10Support", "LayerDownLocked"]]
 position = Vector2(1563, 329)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer3/Ground10SupportPlatform" unique_id=1913531953]
 position = Vector2(35.000023, 53)
 shape = SubResource("Ground10SupportShape")
+disabled = true
 
 [node name="Layer2" type="Node2D" parent="LayerManager" unique_id=541892398]
 modulate = Color(0.8235294, 0.8235294, 0.8235294, 1)
 metadata/_edit_lock_ = true
+
+[node name="EscapeGateBlockerL2" type="AnimatableBody2D" parent="LayerManager/Layer2" unique_id=1807843335 groups=["EscapeGateBlockers"]]
+position = Vector2(2697, 327.5)
+scale = Vector2(1.375, 1.375)
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer2/EscapeGateBlockerL2" unique_id=1613952139]
+position = Vector2(0, 94.18181)
+scale = Vector2(0.99999994, 0.99999994)
+shape = SubResource("EscapeGateCollision")
 
 [node name="Ground" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=937467975]
 position = Vector2(0, 552)
@@ -452,6 +497,13 @@ position = Vector2(1795, 334)
 position = Vector2(37.999977, 46)
 shape = SubResource("SupportShapeSmall")
 
+[node name="Ground10LeftSupportPlatform" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=2134492363 groups=["LayerDownLocked"]]
+position = Vector2(1409.2, 334)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer2/Ground10LeftSupportPlatform" unique_id=2134492364]
+position = Vector2(54.4, 46)
+shape = SubResource("Ground10LeftSupportShape")
+
 [node name="Ground8SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=452704962 groups=["LayerDownLocked"]]
 position = Vector2(1935, 307)
 
@@ -473,16 +525,44 @@ position = Vector2(2267, 280)
 position = Vector2(159, 48)
 shape = SubResource("Ground9SupportShape")
 
-[node name="Ground10SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=8577493 groups=["LayerDownLocked"]]
+[node name="Ground10SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=8577493 groups=["Ground10Support", "LayerDownLocked"]]
 position = Vector2(1563, 361)
 collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer2/Ground10SupportPlatform" unique_id=361985336]
 position = Vector2(35.000023, 53)
 shape = SubResource("Ground10SupportShape")
+disabled = true
 
 [node name="TheHunter" parent="LayerManager/Layer2" unique_id=80229388 instance=ExtResource("6_hunter")]
-position = Vector2(1000, 520)
+position = Vector2(700, 520)
+
+[node name="TheHunter2" parent="LayerManager/Layer2" unique_id=1648377916 instance=ExtResource("6_hunter")]
+position = Vector2(2175, 525)
+scale = Vector2(0.425, 0.425)
+require_matching_layer = false
+detection_radius = 448.0
+bite_radius = 178.0
+activation_platform_path = NodePath("../../Layer3/OrbPlatform")
+damage_recoil_multiplier = 0.5
+
+[node name="TheHunter3" parent="LayerManager/Layer2" unique_id=1395056201 instance=ExtResource("6_hunter")]
+position = Vector2(2376, 524)
+scale = Vector2(0.425, 0.425)
+require_matching_layer = false
+detection_radius = 448.0
+bite_radius = 178.0
+activation_platform_path = NodePath("../../Layer3/OrbPlatform")
+damage_recoil_multiplier = 0.5
+
+[node name="TheHunter4" parent="LayerManager/Layer2" unique_id=1383860169 instance=ExtResource("6_hunter")]
+position = Vector2(1957, 314.99997)
+scale = Vector2(0.425, 0.425)
+require_matching_layer = false
+detection_radius = 448.0
+bite_radius = 178.0
+activation_platform_path = NodePath("../../Layer3/OrbPlatform")
+damage_recoil_multiplier = 0.5
 
 [node name="Layer1" type="Node2D" parent="LayerManager" unique_id=990853741]
 
@@ -630,6 +710,34 @@ scale = Vector2(8, 1)
 color = Color(0.48668993, 0.43843925, 0.43103063, 1)
 metadata/_edit_use_anchors_ = true
 
+[node name="Ground10Left" type="StaticBody2D" parent="LayerManager/Layer1" unique_id=2134492359 groups=["LayerDownLocked"]]
+position = Vector2(1409.2, 366)
+scale = Vector2(1.7, 0.5)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer1/Ground10Left" unique_id=2134492360]
+position = Vector2(32, -32)
+scale = Vector2(16, 2)
+shape = SubResource("RectangleShape2D_rtip2")
+
+[node name="ColorRect" type="ColorRect" parent="LayerManager/Layer1/Ground10Left" unique_id=2134492361]
+offset_top = -64.0
+offset_right = 8.0
+scale = Vector2(8, 1)
+color = Color(0.57571715, 0.52621675, 0.5179543, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect2" type="ColorRect" parent="LayerManager/Layer1/Ground10Left" unique_id=2134492362]
+offset_right = 8.0
+offset_bottom = 64.0
+scale = Vector2(8, 1)
+color = Color(0.48668993, 0.43843925, 0.43103063, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="Ground10LeftPressurePlate" parent="LayerManager/Layer1" unique_id=2134492368 instance=ExtResource("8_pressure_plate")]
+position = Vector2(1424.2, 334)
+scale = Vector2(0.75, 0.75)
+
 [node name="Ground8" type="StaticBody2D" parent="LayerManager/Layer1" unique_id=2134492358 groups=["LayerDownLocked"]]
 position = Vector2(1935, 339)
 scale = Vector2(1.2000008, 0.5)
@@ -701,6 +809,20 @@ offset_bottom = 64.0
 scale = Vector2(8, 1)
 color = Color(0.48668993, 0.43843925, 0.43103063, 1)
 metadata/_edit_use_anchors_ = true
+
+[node name="EscapeGateBlockerL1" type="AnimatableBody2D" parent="LayerManager/Layer1" unique_id=1872320783 groups=["EscapeGateBlockers"]]
+position = Vector2(2697, 359.5)
+scale = Vector2(1.375, 1.375)
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer1/EscapeGateBlockerL1" unique_id=481682957]
+position = Vector2(0, 70)
+shape = SubResource("EscapeGateCollision")
+
+[node name="EscapeGate" parent="LayerManager/Layer1" unique_id=358938542 instance=ExtResource("7_escape_door")]
+position = Vector2(2697, 552)
+scale = Vector2(1.375, 1.375)
+platform_path = NodePath("../../Layer3/OrbPlatform")
 
 [node name="SupportPlatform1240" type="StaticBody2D" parent="LayerManager/Layer1" unique_id=1177062555]
 position = Vector2(1240, 584)
@@ -990,3 +1112,12 @@ offset_top = 56.0
 offset_right = 4432.0
 offset_bottom = 96.0
 scale = Vector2(1.1999999, 1.1999999)
+
+[node name="Area2D" type="Area2D" parent="." unique_id=338758549]
+position = Vector2(1572, 958)
+scale = Vector2(2.685, 2.685)
+collision_layer = 0
+script = ExtResource("6_w0lsm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1685416252]
+shape = SubResource("FallResetShape")
