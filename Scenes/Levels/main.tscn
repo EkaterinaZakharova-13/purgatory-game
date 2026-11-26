@@ -5,10 +5,10 @@
 [ext_resource type="PackedScene" path="res://Scenes/Entities/orb_crate.tscn" id="3_crate"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/player_hud.tscn" id="4_hud"]
 [ext_resource type="PackedScene" path="res://Scenes/Entities/orb_platform.tscn" id="5_platform"]
+[ext_resource type="PackedScene" uid="uid://cuixeh0uak6yi" path="res://Scenes/Entities/the_hunter.tscn" id="6_hunter"]
 [ext_resource type="Script" uid="uid://b2g57ekc2hpvt" path="res://Scenes/Levels/area_2d.gd" id="6_w0lsm"]
 [ext_resource type="PackedScene" path="res://Scenes/Entities/escape_door.tscn" id="7_escape_door"]
 [ext_resource type="PackedScene" path="res://Scenes/Entities/pressure_plate.tscn" id="8_pressure_plate"]
-[ext_resource type="PackedScene" uid="uid://cuixeh0uak6yi" path="res://Scenes/Entities/the_hunter.tscn" id="6_hunter"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rtip2"]
 size = Vector2(4, 32)
@@ -535,7 +535,34 @@ shape = SubResource("Ground10SupportShape")
 disabled = true
 
 [node name="TheHunter" parent="LayerManager/Layer2" unique_id=80229388 instance=ExtResource("6_hunter")]
-position = Vector2(1000, 520)
+position = Vector2(700, 520)
+
+[node name="TheHunter2" parent="LayerManager/Layer2" unique_id=1648377916 instance=ExtResource("6_hunter")]
+position = Vector2(2175, 525)
+scale = Vector2(0.425, 0.425)
+require_matching_layer = false
+detection_radius = 448.0
+bite_radius = 178.0
+activation_platform_path = NodePath("../../Layer3/OrbPlatform")
+damage_recoil_multiplier = 0.5
+
+[node name="TheHunter3" parent="LayerManager/Layer2" unique_id=1395056201 instance=ExtResource("6_hunter")]
+position = Vector2(2376, 524)
+scale = Vector2(0.425, 0.425)
+require_matching_layer = false
+detection_radius = 448.0
+bite_radius = 178.0
+activation_platform_path = NodePath("../../Layer3/OrbPlatform")
+damage_recoil_multiplier = 0.5
+
+[node name="TheHunter4" parent="LayerManager/Layer2" unique_id=1383860169 instance=ExtResource("6_hunter")]
+position = Vector2(1957, 314.99997)
+scale = Vector2(0.425, 0.425)
+require_matching_layer = false
+detection_radius = 448.0
+bite_radius = 178.0
+activation_platform_path = NodePath("../../Layer3/OrbPlatform")
+damage_recoil_multiplier = 0.5
 
 [node name="Layer1" type="Node2D" parent="LayerManager" unique_id=990853741]
 

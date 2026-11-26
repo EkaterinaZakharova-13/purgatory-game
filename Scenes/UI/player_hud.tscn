@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Texture2D" path="res://Assets/UI/health_sanity_full.png" id="1_full"]
 [ext_resource type="Texture2D" path="res://Assets/UI/health_sanity_empty.png" id="2_empty"]
@@ -47,6 +47,12 @@ code = "shader_type canvas_item;\nuniform float strength : hint_range(0.0, 0.3) 
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_orb_vignette"]
 shader = SubResource("Shader_orb_vignette")
+[sub_resource type="Shader" id="Shader_damage_outline"]
+code = "shader_type canvas_item;\nuniform float strength : hint_range(0.0, 1.0) = 0.0;\nvoid fragment() {\n\tfloat edge_distance = min(min(UV.x, 1.0 - UV.x), min(UV.y, 1.0 - UV.y));\n\tfloat border = 1.0 - smoothstep(0.012, 0.035, edge_distance);\n\tCOLOR = vec4(0.95, 0.025, 0.04, border * strength * 0.8);\n}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_damage_outline"]
+shader = SubResource("Shader_damage_outline")
+
 [node name="PlayerHUD" type="CanvasLayer"]
 
 [node name="Vignette" type="ColorRect" parent="."]
@@ -57,6 +63,15 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 material = SubResource("ShaderMaterial_orb_vignette")
+[node name="DamageOutline" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_damage_outline")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="ElapsedTime" type="Label" parent="."]
 offset_left = 28.0
 offset_top = 24.0
