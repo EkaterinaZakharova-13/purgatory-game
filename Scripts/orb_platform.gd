@@ -1,5 +1,8 @@
 extends StaticBody2D
 
+signal orb_placed
+signal orb_recalled
+
 const GROUND10_SCENE: PackedScene = preload("res://Scenes/Entities/ground_10.tscn")
 
 @export_range(1, 3, 1) var current_layer := 1
@@ -45,6 +48,7 @@ func on_orb_arrived(orb: Node2D) -> void:
 	if placed_orb == orb:
 		_set_occupied(true)
 		_spawn_ground10()
+		orb_placed.emit()
 
 func release_orb(orb: Node2D) -> void:
 	if placed_orb != orb:
@@ -53,6 +57,7 @@ func release_orb(orb: Node2D) -> void:
 	placed_orb = null
 	_set_occupied(false)
 	_set_ground10_active(false)
+	orb_recalled.emit()
 	if is_instance_valid(orb):
 		orb.call("recall_from_platform", self)
 
@@ -84,7 +89,6 @@ func _set_ground10_support_collisions(active: bool) -> void:
 		var collision_shape := support.get_node_or_null("CollisionShape2D") as CollisionShape2D
 		if collision_shape != null:
 			collision_shape.set_deferred("disabled", not active)
-
 func _set_occupied(occupied: bool) -> void:
 	if brightness_tween and brightness_tween.is_running():
 		brightness_tween.kill()

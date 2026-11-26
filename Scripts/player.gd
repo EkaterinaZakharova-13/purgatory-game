@@ -18,7 +18,7 @@ const DEPTH_Z_STRIDE := 1024
 @onready var layer_manager := get_tree().get_first_node_in_group("LayerManager")
 
 @export_group("Movement")
-@export var max_speed: float = 240.0
+@export var max_speed: float = 220.0
 @export var acceleration: float = 1800.0
 @export_range(0.0, 1.0) var ground_friction: float = 0.45
 @export var ground_braking: float = 3000.0
@@ -44,11 +44,13 @@ var dash_cooldown_remaining := 0.0
 var original_sprite_modulate := Color.WHITE
 
 var starting_mask: int = 2
+var starting_position := Vector2.ZERO
 var current_mask := starting_mask
 
 var last_direction := 1
 
 func _ready():
+	starting_position = global_position
 	original_sprite_modulate = animated_sprite.modulate
 	walking_dust.emitting = false
 	_update_z_index()
@@ -62,6 +64,28 @@ func _ready():
 	further_check.set_collision_mask_value(starting_mask-1, 1)
 	closer_check.collision_mask = 0
 	closer_check.set_collision_mask_value(starting_mask+1, 1)
+
+func respawn_at_start() -> void:
+	if orb.is_placing or orb.is_placed:
+		orb.call_back()
+	global_position = starting_position
+	velocity = Vector2.ZERO
+	current_mask = starting_mask
+	collision_mask = 0
+	set_collision_mask_value(starting_mask, true)
+	further_check.collision_mask = 0
+	if current_mask > 1:
+		further_check.set_collision_mask_value(current_mask - 1, true)
+	closer_check.collision_mask = 0
+	if current_mask < layer_manager.layer_size:
+		closer_check.set_collision_mask_value(current_mask + 1, true)
+	dash_duration_remaining = 0.0
+	animated_sprite.modulate = original_sprite_modulate
+	walking_dust.emitting = false
+	last_grounded_time = -INF
+	last_jump_pressed_time = -INF
+	_update_z_index()
+	_play_animation(ANIM_IDLE)
 
 func _physics_process(delta: float) -> void:
 	dash_duration_remaining = maxf(0.0, dash_duration_remaining - delta)
@@ -241,7 +265,7 @@ func _try_push_orb_crate(direction: float) -> void:
 		if crate == null or not crate.is_in_group("OrbCrates"):
 			continue
 		if collision.get_normal().x * direction < -0.5:
-			crate.call("receive_push", signf(direction))
+			crate.call("receive_push", signf(direction), current_mask, global_position.y)
 
 func _get_carried_orb_crate() -> Node2D:
 	if not bool(orb.get("is_placed")) and not bool(orb.get("is_placing")):
