@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal damaged_percent(percent: float)
+
 const ANIM_IDLE: StringName = &"Idle"
 const ANIM_WALKING: StringName = &"Walking"
 const ANIM_WALKING_TO_IDLE: StringName = &"Walking-To-Idle"
@@ -47,6 +49,11 @@ var starting_mask: int = 2
 var current_mask := starting_mask
 
 var last_direction := 1
+
+func take_damage_percent(percent: float) -> void:
+	if percent <= 0.0:
+		return
+	damaged_percent.emit(percent)
 
 func _ready():
 	original_sprite_modulate = animated_sprite.modulate

@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://Scenes/Entities/orb_crate.tscn" id="3_crate"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/player_hud.tscn" id="4_hud"]
 [ext_resource type="PackedScene" path="res://Scenes/Entities/orb_platform.tscn" id="5_platform"]
+[ext_resource type="PackedScene" uid="uid://cuixeh0uak6yi" path="res://Scenes/Entities/the_hunter.tscn" id="6_hunter"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rtip2"]
 size = Vector2(4, 32)
@@ -24,9 +25,10 @@ size = Vector2(143.36, 32)
 [node name="Main" type="Node" unique_id=767089903]
 
 [node name="Background" type="ColorRect" parent="." unique_id=1788464874]
-offset_top = 24.0
-offset_right = 27.94086
-offset_bottom = 88.0
+offset_left = -3.0
+offset_top = 23.0
+offset_right = 24.94086
+offset_bottom = 87.0
 scale = Vector2(159.766, 8)
 color = Color(0.12, 0.062759995, 0.0564, 1)
 
@@ -478,6 +480,9 @@ collision_layer = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer2/Ground10SupportPlatform" unique_id=361985336]
 position = Vector2(35.000023, 53)
 shape = SubResource("Ground10SupportShape")
+
+[node name="TheHunter" parent="LayerManager/Layer2" unique_id=80229388 instance=ExtResource("6_hunter")]
+position = Vector2(1000, 520)
 
 [node name="Layer1" type="Node2D" parent="LayerManager" unique_id=990853741]
 
