@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Texture2D" path="res://Assets/UI/health_sanity_full.png" id="1_full"]
 [ext_resource type="Texture2D" path="res://Assets/UI/health_sanity_empty.png" id="2_empty"]
@@ -31,6 +31,16 @@ code = "shader_type canvas_item;\nuniform float depletion : hint_range(0.0, 1.0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sanity_fill"]
 shader = SubResource("Shader_sanity_fill")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_health_loss"]
+atlas = ExtResource("1_full")
+region = Rect2(428, 181, 410, 19)
+
+[sub_resource type="Shader" id="Shader_health_loss"]
+code = "shader_type canvas_item;\nuniform float health_fraction = 1.0;\nvoid fragment() {\n\tvec4 color = texture(TEXTURE, UV) * COLOR;\n\tfloat loss = smoothstep(health_fraction, min(health_fraction + 0.015, 1.01), UV.x);\n\tcolor.a *= loss;\n\tCOLOR = color;\n}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_health_loss"]
+shader = SubResource("Shader_health_loss")
 
 [sub_resource type="Shader" id="Shader_orb_vignette"]
 code = "shader_type canvas_item;\nuniform float strength : hint_range(0.0, 0.3) = 0.0;\nuniform float edge_width : hint_range(0.01, 0.5) = 0.12;\nuniform float softness : hint_range(0.01, 0.5) = 0.16;\nvoid fragment() {\n\tfloat edge_distance = min(min(UV.x, 1.0 - UV.x), min(UV.y, 1.0 - UV.y));\n\tfloat vignette = 1.0 - smoothstep(edge_width, edge_width + softness, edge_distance);\n\tCOLOR = vec4(0.0, 0.0, 0.0, strength * vignette);\n}"
@@ -85,6 +95,15 @@ offset_bottom = 160.0
 mouse_filter = 2
 texture = ExtResource("4_sanity")
 material = SubResource("ShaderMaterial_sanity_fill")
+
+[node name="HealthLoss" type="TextureRect" parent="HUDRoot"]
+offset_left = 264.0
+offset_top = 181.0
+offset_right = 674.0
+offset_bottom = 200.0
+mouse_filter = 2
+texture = SubResource("AtlasTexture_health_loss")
+material = SubResource("ShaderMaterial_health_loss")
 
 [node name="FlowerParticles" type="GPUParticles2D" parent="HUDRoot"]
 position = Vector2(605, 115)

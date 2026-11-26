@@ -4,6 +4,7 @@ extends Control
 @export var crate_sanity_drain_per_second := 5.0
 @export var sanity_recovery_per_second := 8.0
 @export var sanity_recovery_delay := 2.0
+@export_range(1.0, 500.0, 1.0) var max_health := 100.0
 @export var recovery_flower_texture: Texture2D
 @export_range(1.0, 1.15) var orb_zoom_multiplier := 1.06
 @export_range(0.75, 1.0) var dash_zoom_multiplier := 0.9
@@ -11,6 +12,7 @@ extends Control
 @export var screen_effect_smoothing := 8.0
 
 @onready var sanity_fill_material: ShaderMaterial = $SanityFill.material as ShaderMaterial
+@onready var health_loss_material: ShaderMaterial = $HealthLoss.material as ShaderMaterial
 @onready var flower_particles: GPUParticles2D = $FlowerParticles
 @onready var particle_material: ParticleProcessMaterial = flower_particles.process_material as ParticleProcessMaterial
 @onready var vignette_material: ShaderMaterial = $"../Vignette".material as ShaderMaterial
@@ -18,6 +20,7 @@ extends Control
 @onready var elapsed_timer: Timer = $ElapsedTimer
 
 var sanity := 100.0
+var health := 100.0
 var time_since_orb_removed := 0.0
 var depletion_flower_texture: Texture2D
 var normal_camera_zoom := Vector2.ONE
@@ -26,12 +29,22 @@ var current_vignette_strength := 0.0
 var elapsed_seconds := 0
 
 func _ready() -> void:
+	var player := get_tree().get_first_node_in_group("Player")
+	if player != null and player.has_signal("damaged_percent"):
+		player.connect("damaged_percent", _on_player_damaged_percent)
+	health = max_health
 	depletion_flower_texture = flower_particles.texture
 	flower_particles.emitting = false
 	_update_sanity_fill()
+	_update_health_bar()
 	elapsed_time_label.text = "Time: 0:00"
 	elapsed_timer.timeout.connect(_on_elapsed_timer_timeout)
 	elapsed_timer.start()
+
+func _on_player_damaged_percent(percent: float) -> void:
+	var damage_amount := max_health * clampf(percent, 0.0, 100.0) / 100.0
+	health = maxf(0.0, health - damage_amount)
+	_update_health_bar()
 
 func _on_elapsed_timer_timeout() -> void:
 	elapsed_seconds += 1
@@ -111,3 +124,7 @@ func _update_screen_effects(delta: float, orb_is_active: bool, dash_is_active: b
 func _update_sanity_fill() -> void:
 	var depletion := clampf((100.0 - sanity) / 100.0, 0.0, 1.0)
 	sanity_fill_material.set_shader_parameter("depletion", depletion)
+
+func _update_health_bar() -> void:
+	var health_fraction := clampf(health / max_health, 0.0, 1.0)
+	health_loss_material.set_shader_parameter("health_fraction", health_fraction)

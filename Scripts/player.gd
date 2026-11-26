@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal damaged_percent(percent: float)
+
 const ANIM_IDLE: StringName = &"Idle"
 const ANIM_WALKING: StringName = &"Walking"
 const ANIM_WALKING_TO_IDLE: StringName = &"Walking-To-Idle"
@@ -48,6 +50,11 @@ var starting_position := Vector2.ZERO
 var current_mask := starting_mask
 
 var last_direction := 1
+
+func take_damage_percent(percent: float) -> void:
+	if percent <= 0.0:
+		return
+	damaged_percent.emit(percent)
 
 func _ready():
 	starting_position = global_position
