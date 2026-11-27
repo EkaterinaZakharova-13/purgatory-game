@@ -138,6 +138,8 @@ func _set_area_radius(area: Area2D, radius: float) -> void:
 func _player_is_in_area(area: Area2D) -> bool:
 	if not area.overlaps_body(player):
 		return false
+	if area == bite_area and player.has_method("is_invulnerable") and player.call("is_invulnerable"):
+		return false
 	if not require_matching_layer:
 		return true
 	return int(player.get("current_mask")) == layer_number

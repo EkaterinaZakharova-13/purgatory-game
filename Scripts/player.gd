@@ -16,6 +16,8 @@ const DEPTH_Z_STRIDE := 1024
 @onready var orb_anchor: Marker2D = $OrbAnchor
 @onready var walking_dust: GPUParticles2D = $WalkingDust
 @onready var walking_dust_material: ParticleProcessMaterial = walking_dust.process_material as ParticleProcessMaterial
+@onready var dash_petals: GPUParticles2D = $DashPetals
+@onready var dash_petals_material: ParticleProcessMaterial = dash_petals.process_material as ParticleProcessMaterial
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var layer_manager := get_tree().get_first_node_in_group("LayerManager")
 
@@ -28,9 +30,12 @@ const DEPTH_Z_STRIDE := 1024
 
 @export_group("Dash")
 @export_range(1.0, 2.5, 0.05) var dash_speed_multiplier: float = 2.0
-@export_range(0.1, 2.0, 0.1) var dash_duration: float = 0.8
+@export_range(0.1, 2.0, 0.1) var dash_duration: float = 0.5
 @export_range(0.1, 10.0, 0.1) var dash_cooldown: float = 3.0
 @export var dash_tint := Color(1.8, 1.6, 1.3, 1.0)
+@export_range(0.02, 0.2, 0.01) var dash_afterimage_interval := 0.07
+@export_range(0.05, 0.5, 0.01) var dash_afterimage_lifetime := 0.22
+@export var dash_afterimage_tint := Color(0.86, 0.94, 1.0, 0.42)
 
 @export_group("Jump")
 @export var coyote_time: float = 0.125
@@ -48,6 +53,8 @@ var last_grounded_time := -INF
 var last_jump_pressed_time := -INF
 var dash_duration_remaining := 0.0
 var dash_cooldown_remaining := 0.0
+var dash_afterimage_timer := 0.0
+var dash_direction := 1
 var damage_recoil_remaining := 0.0
 var current_damage_recoil_strength := 1.0
 var original_sprite_modulate := Color.WHITE
@@ -59,7 +66,7 @@ var current_mask := starting_mask
 var last_direction := 1
 
 func take_damage_percent(percent: float, source_position: Vector2 = Vector2.INF, recoil_multiplier: float = 1.0) -> void:
-	if percent <= 0.0:
+	if percent <= 0.0 or is_invulnerable():
 		return
 	damaged_percent.emit(percent)
 	var recoil_strength := clampf(recoil_multiplier, 0.0, 1.0)
@@ -70,6 +77,9 @@ func take_damage_percent(percent: float, source_position: Vector2 = Vector2.INF,
 	velocity.x = knockback_direction * damage_recoil_horizontal_speed * recoil_strength
 	velocity.y = minf(velocity.y, -damage_recoil_bounce_speed * recoil_strength)
 	damage_recoil_remaining = damage_recoil_duration * recoil_strength
+
+func is_invulnerable() -> bool:
+	return dash_duration_remaining > 0.0
 
 func _ready():
 	starting_position = global_position
@@ -102,6 +112,7 @@ func respawn_at_start() -> void:
 	if current_mask < layer_manager.layer_size:
 		closer_check.set_collision_mask_value(current_mask + 1, true)
 	dash_duration_remaining = 0.0
+	dash_afterimage_timer = 0.0
 	animated_sprite.modulate = original_sprite_modulate
 	walking_dust.emitting = false
 	last_grounded_time = -INF
@@ -116,6 +127,9 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("dash") and dash_cooldown_remaining <= 0.0:
 		dash_duration_remaining = dash_duration
 		dash_cooldown_remaining = dash_cooldown
+		dash_direction = last_direction
+		damage_recoil_remaining = 0.0
+		_emit_dash_petals()
 	animated_sprite.modulate = dash_tint if dash_duration_remaining > 0.0 else original_sprite_modulate
 	if Input.is_action_just_pressed("orb_toggle"):
 		orb.toggle()
@@ -142,7 +156,9 @@ func _physics_process(delta: float) -> void:
 	if not was_on_floor:
 		velocity.y += gravity * delta
 
-	if damage_recoil_remaining > 0.0:
+	if dash_duration_remaining > 0.0:
+		velocity.x = dash_direction * max_speed * dash_speed_multiplier
+	elif damage_recoil_remaining > 0.0:
 		velocity.x = move_toward(velocity.x, 0.0, damage_recoil_horizontal_speed * 0.55 * current_damage_recoil_strength * delta)
 	elif direction != 0.0:
 		var reversing_on_ground := (
@@ -193,7 +209,9 @@ func _physics_process(delta: float) -> void:
 	var on_floor_after_move := is_on_floor()
 	_update_walking_dust(direction, on_floor_after_move)
 
-	if jump_started or not on_floor_after_move:
+	if dash_duration_remaining > 0.0:
+		_play_animation(ANIM_WALKING)
+	elif jump_started or not on_floor_after_move:
 		_play_animation(ANIM_JUMPING)
 	elif not was_on_floor:
 		_play_animation(ANIM_JUMPING_TO_LAND)
@@ -205,12 +223,59 @@ func _physics_process(delta: float) -> void:
 		_play_animation(ANIM_WALKING_TO_IDLE)
 	elif animated_sprite.animation != ANIM_WALKING_TO_IDLE and animated_sprite.animation != ANIM_JUMPING_TO_LAND:
 		_play_animation(ANIM_IDLE)
+	_update_dash_afterimage(delta)
 
 func _update_walking_dust(direction: float, on_floor: bool) -> void:
 	var is_walking := on_floor and velocity.x * direction > stop_threshold
 	walking_dust.emitting = is_walking
 	if is_walking:
 		walking_dust_material.direction = Vector3(-signf(direction), -0.08, 0.0)
+
+func _update_dash_afterimage(delta: float) -> void:
+	if dash_duration_remaining <= 0.0:
+		dash_afterimage_timer = 0.0
+		return
+
+	dash_afterimage_timer -= delta
+	if dash_afterimage_timer > 0.0:
+		return
+	dash_afterimage_timer = dash_afterimage_interval
+	_spawn_dash_afterimage()
+
+func _emit_dash_petals() -> void:
+	dash_petals.position.x = -float(dash_direction) * 16.0
+	dash_petals_material.direction = Vector3(-float(dash_direction), -0.25, 0.0)
+	dash_petals.restart()
+	dash_petals.emitting = true
+
+func _spawn_dash_afterimage() -> void:
+	var ghost_parent := get_tree().current_scene
+	if ghost_parent == null:
+		ghost_parent = get_parent()
+	if ghost_parent == null:
+		return
+
+	var afterimage := AnimatedSprite2D.new()
+	afterimage.sprite_frames = animated_sprite.sprite_frames
+	afterimage.animation = animated_sprite.animation
+	afterimage.frame = animated_sprite.frame
+	afterimage.frame_progress = animated_sprite.frame_progress
+	afterimage.flip_h = animated_sprite.flip_h
+	afterimage.centered = animated_sprite.centered
+	afterimage.offset = animated_sprite.offset
+	afterimage.texture_filter = animated_sprite.texture_filter
+	afterimage.modulate = dash_afterimage_tint
+	afterimage.z_as_relative = false
+	afterimage.z_index = z_index - 1
+	ghost_parent.add_child(afterimage)
+	afterimage.global_transform = animated_sprite.global_transform
+
+	var faded_color := dash_afterimage_tint
+	faded_color.a = 0.0
+	var fade_tween := afterimage.create_tween()
+	fade_tween.tween_property(afterimage, "modulate", faded_color, dash_afterimage_lifetime)
+	fade_tween.finished.connect(afterimage.queue_free)
+
 func _on_animation_finished(animation_name: StringName) -> void:
 	match animation_name:
 		ANIM_WALKING_TO_IDLE:
