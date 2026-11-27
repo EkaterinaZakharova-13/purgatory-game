@@ -225,7 +225,7 @@ scale = Vector2(0.58, 0.58)
 position = Vector2(1826.9999, 483.99997)
 scale = Vector2(0.58, 0.58)
 ground_parent_path = NodePath("../../Layer1")
-ground_position = Vector2(1563, 388)
+ground_position = Vector2(1463, 388)
 
 [node name="Ground6SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=1091602071 groups=["LayerDownLocked"]]
 position = Vector2(1655, 329)
@@ -234,12 +234,13 @@ position = Vector2(1655, 329)
 position = Vector2(38.999977, 72)
 shape = SubResource("SupportShapeSmall")
 
-[node name="Ground7SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=2081726196 groups=["LayerDownLocked"]]
+[node name="Ground7SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=2081726196 groups=["LayerDownLocked", "Ground7ToggleSupport"]]
 position = Vector2(1795, 302)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer3/Ground7SupportPlatform" unique_id=743918577]
 position = Vector2(37.999977, 48)
 shape = SubResource("SupportShapeSmall")
+disabled = true
 
 [node name="Ground10LeftSupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=2134492365 groups=["LayerDownLocked"]]
 position = Vector2(1409.2, 302)
@@ -270,7 +271,7 @@ position = Vector2(158, 49)
 shape = SubResource("Ground9SupportShape")
 
 [node name="Ground10SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=1912363485 groups=["Ground10Support", "LayerDownLocked"]]
-position = Vector2(1563, 329)
+position = Vector2(1463, 329)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer3/Ground10SupportPlatform" unique_id=1913531953]
 position = Vector2(35.000023, 53)
@@ -490,12 +491,13 @@ position = Vector2(1655, 361)
 position = Vector2(39.999977, 47)
 shape = SubResource("SupportShapeSmall")
 
-[node name="Ground7SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=489268753 groups=["LayerDownLocked"]]
+[node name="Ground7SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=489268753 groups=["LayerDownLocked", "Ground7ToggleSupport"]]
 position = Vector2(1795, 334)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer2/Ground7SupportPlatform" unique_id=843349376]
 position = Vector2(37.999977, 46)
 shape = SubResource("SupportShapeSmall")
+disabled = true
 
 [node name="Ground10LeftSupportPlatform" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=2134492363 groups=["LayerDownLocked"]]
 position = Vector2(1409.2, 334)
@@ -526,7 +528,7 @@ position = Vector2(159, 48)
 shape = SubResource("Ground9SupportShape")
 
 [node name="Ground10SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=8577493 groups=["Ground10Support", "LayerDownLocked"]]
-position = Vector2(1563, 361)
+position = Vector2(1463, 361)
 collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer2/Ground10SupportPlatform" unique_id=361985336]
@@ -688,10 +690,12 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Ground7" type="StaticBody2D" parent="LayerManager/Layer1" unique_id=134161656 groups=["LayerDownLocked"]]
 position = Vector2(1795, 366)
+visible = false
 scale = Vector2(1.2000008, 0.5)
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer1/Ground7" unique_id=1872017181]
+disabled = true
 position = Vector2(32, -32)
 scale = Vector2(16, 2)
 shape = SubResource("RectangleShape2D_rtip2")
@@ -737,6 +741,9 @@ metadata/_edit_use_anchors_ = true
 [node name="Ground10LeftPressurePlate" parent="LayerManager/Layer1" unique_id=2134492368 instance=ExtResource("8_pressure_plate")]
 position = Vector2(1424.2, 334)
 scale = Vector2(0.75, 0.75)
+required_crate_path = NodePath("../../../OrbCrate3")
+controlled_platform_path = NodePath("../../Layer1/Ground7")
+supporting_collision_group = &"Ground7ToggleSupport"
 
 [node name="Ground8" type="StaticBody2D" parent="LayerManager/Layer1" unique_id=2134492358 groups=["LayerDownLocked"]]
 position = Vector2(1935, 339)
