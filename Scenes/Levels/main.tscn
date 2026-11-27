@@ -1,10 +1,24 @@
 [gd_scene format=3 uid="uid://bg81v0ep40pxn"]
 
+[ext_resource type="Shader" uid="uid://cqcgmn4t8a2m1" path="res://Assets/Objects/WatchingTree/tree_blend.gdshader" id="2_irfg1"]
 [ext_resource type="PackedScene" uid="uid://ccnbt8r1lckqy" path="res://Scenes/Entities/player.tscn" id="2_u872a"]
 [ext_resource type="Script" uid="uid://bkhjuv1q4d3lk" path="res://Scripts/layer_manager.gd" id="2_yjsus"]
+[ext_resource type="Texture2D" uid="uid://ogrcjstim8et" path="res://Assets/Objects/WatchingTree/tree8.png" id="3_5sf7f"]
 [ext_resource type="PackedScene" path="res://Scenes/Entities/orb_crate.tscn" id="3_crate"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/player_hud.tscn" id="4_hud"]
 [ext_resource type="PackedScene" path="res://Scenes/Entities/orb_platform.tscn" id="5_platform"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/watching_tree.tscn" id="6_watching_tree"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/firefly.tscn" id="7_firefly"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/crow.tscn" id="8_crow"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/crow_pass.tscn" id="9_crow_pass"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/tree_leaves.tscn" id="10_tree_leaves"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_asd15"]
+shader = ExtResource("2_irfg1")
+shader_parameter/next_frame = ExtResource("3_5sf7f")
+shader_parameter/frame_blend = 0.0
+shader_parameter/eye_brightness = 0.42
+shader_parameter/glow_strength = 0.65
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rtip2"]
 size = Vector2(4, 32)
@@ -61,6 +75,51 @@ offset_right = 1181.0001
 offset_bottom = 674.0
 scale = Vector2(38.34194, 6.5431304)
 color = Color(0.23546666, 0.4139393, 0.3771598, 1)
+
+[node name="CrowPass" parent="." unique_id=770057689 instance=ExtResource("9_crow_pass")]
+position = Vector2(1252.0001, 115)
+scale = Vector2(-0.17893371, 0.1672746)
+
+[node name="Crow" parent="." unique_id=1783480905 instance=ExtResource("8_crow")]
+position = Vector2(1399, 189)
+flight_speed = 154.0
+
+[node name="WatchingTree" parent="." unique_id=960954324 instance=ExtResource("6_watching_tree")]
+material = SubResource("ShaderMaterial_asd15")
+position = Vector2(591.00006, 348)
+scale = Vector2(0.46000245, 0.42)
+
+[node name="TreeLeaves" parent="." unique_id=74999902 instance=ExtResource("10_tree_leaves")]
+position = Vector2(578, 148.00003)
+scale = Vector2(0.69999754, 0.65999997)
+
+[node name="Firefly" parent="." unique_id=673289310 instance=ExtResource("7_firefly")]
+position = Vector2(709, 376)
+rotation = 0.8374189
+scale = Vector2(0.72197455, -0.80151814)
+
+[node name="Firefly2" parent="." unique_id=17072893 instance=ExtResource("7_firefly")]
+position = Vector2(663, 383)
+
+[node name="Firefly3" parent="." unique_id=676588878 instance=ExtResource("7_firefly")]
+position = Vector2(575.00006, 320.99994)
+rotation = 1.2715607
+scale = Vector2(0.7612484, 0.8196705)
+
+[node name="Firefly4" parent="." unique_id=623812281 instance=ExtResource("7_firefly")]
+position = Vector2(1185, 405.99994)
+rotation = 1.2715607
+scale = Vector2(0.7612484, 0.8196705)
+
+[node name="Firefly5" parent="." unique_id=332484135 instance=ExtResource("7_firefly")]
+position = Vector2(1414.0001, 342.99997)
+rotation = 2.5647333
+scale = Vector2(0.7612484, 0.8196705)
+
+[node name="Firefly6" parent="." unique_id=417528928 instance=ExtResource("7_firefly")]
+position = Vector2(1387.9999, 303.0001)
+rotation = 3.615077
+scale = Vector2(0.7612484, 0.8196705)
 
 [node name="Player" parent="." unique_id=456008934 instance=ExtResource("2_u872a")]
 position = Vector2(560, 440)
