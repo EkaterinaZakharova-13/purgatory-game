@@ -9,7 +9,7 @@
 5. Press **F5** (or ▶ top right) to play.
 
 ## Make a Windows .exe (to share with people without Godot)
-Project → Export… → **Windows Desktop** (already set up: one single .exe) →
+Project → Export… → **Windows Desktop** (already set up: makes purgatoryGame.exe + purgatoryGame.pck, keep both files together) →
 untick *Export With Debug* → **Export Project…**.
 The first time Godot asks for the export templates: *Manage Export Templates → Download and Install*.
 
