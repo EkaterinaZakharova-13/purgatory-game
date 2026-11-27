@@ -569,7 +569,7 @@ damage_recoil_multiplier = 0.5
 [node name="Layer1" type="Node2D" parent="LayerManager" unique_id=990853741]
 
 [node name="Ground5" type="StaticBody2D" parent="LayerManager/Layer1" unique_id=894772816]
-position = Vector2(1752.0001, 584)
+position = Vector2(1656, 584)
 scale = Vector2(1.2000008, 0.5)
 metadata/_edit_group_ = true
 
@@ -870,6 +870,13 @@ shape = SubResource("SupportShapeSmall")
 position = Vector2(2494, 584)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer1/SupportPlatform2494" unique_id=1623590773]
+position = Vector2(38.4, -16)
+shape = SubResource("SupportShapeSmall")
+
+[node name="Ground5SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer1" unique_id=2046057107]
+position = Vector2(1656, 584)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer1/Ground5SupportPlatform" unique_id=411575602]
 position = Vector2(38.4, -16)
 shape = SubResource("SupportShapeSmall")
 
