@@ -234,7 +234,7 @@ position = Vector2(1655, 329)
 position = Vector2(38.999977, 72)
 shape = SubResource("SupportShapeSmall")
 
-[node name="Ground7SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=2081726196 groups=["LayerDownLocked", "Ground7ToggleSupport"]]
+[node name="Ground7SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=2081726196 groups=["Ground7ToggleSupport", "LayerDownLocked"]]
 position = Vector2(1795, 302)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer3/Ground7SupportPlatform" unique_id=743918577]
@@ -491,7 +491,7 @@ position = Vector2(1655, 361)
 position = Vector2(39.999977, 47)
 shape = SubResource("SupportShapeSmall")
 
-[node name="Ground7SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=489268753 groups=["LayerDownLocked", "Ground7ToggleSupport"]]
+[node name="Ground7SupportPlatform" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=489268753 groups=["Ground7ToggleSupport", "LayerDownLocked"]]
 position = Vector2(1795, 334)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer2/Ground7SupportPlatform" unique_id=843349376]
@@ -689,16 +689,16 @@ color = Color(0.48668993, 0.43843925, 0.43103063, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="Ground7" type="StaticBody2D" parent="LayerManager/Layer1" unique_id=134161656 groups=["LayerDownLocked"]]
-position = Vector2(1795, 366)
 visible = false
+position = Vector2(1795, 366)
 scale = Vector2(1.2000008, 0.5)
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LayerManager/Layer1/Ground7" unique_id=1872017181]
-disabled = true
 position = Vector2(32, -32)
 scale = Vector2(16, 2)
 shape = SubResource("RectangleShape2D_rtip2")
+disabled = true
 
 [node name="ColorRect" type="ColorRect" parent="LayerManager/Layer1/Ground7" unique_id=756299330]
 offset_top = -64.0
