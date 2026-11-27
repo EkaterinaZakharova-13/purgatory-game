@@ -23,7 +23,8 @@ extends CanvasLayer
 ## Lines starting with "#" are headings.
 @export_multiline var credits_text := "# A GAME BY\nLunaBorea\nneopolen\nElena-novia\nEkaterinaZakharova-13\n\n# MADE WITH\nGodot Engine"
 
-const FONT_NAMES := ["Cinzel", "Trajan Pro", "Optima", "Baskerville", "Times New Roman"]
+const FONT_FILE := "res://MyChanges/Menu/Fonts/Cinzel.ttf"
+const FONT_NAMES := ["Optima", "Baskerville", "Segoe UI Symbol", "Times New Roman"]
 const DIM := Color(1, 1, 1, 0.62)
 const BRIGHT := Color(1, 1, 1, 1)
 
@@ -139,15 +140,23 @@ func _show_page(page_name: String, fade := true) -> void:
 # ================================================================== building
 
 func _make_fonts() -> void:
+	# Cinzel (free, SIL Open Font License, see Fonts/OFL.txt) is part of the game, so the menu
+	# looks the same on every computer. System fonts are only a backup for symbols like arrows.
 	var system := SystemFont.new()
 	system.font_names = PackedStringArray(FONT_NAMES)
 	system.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
+	var base: Font = system
+	if ResourceLoader.exists(FONT_FILE):
+		var cinzel := load(FONT_FILE) as FontFile
+		if cinzel:
+			cinzel.fallbacks = [system]
+			base = cinzel
 	_font = FontVariation.new()
-	_font.base_font = system
-	_font.spacing_glyph = 3
+	_font.base_font = base
+	_font.spacing_glyph = 2
 	_font_wide = FontVariation.new()
-	_font_wide.base_font = system
-	_font_wide.spacing_glyph = 9
+	_font_wide.base_font = base
+	_font_wide.spacing_glyph = 6
 
 
 func _build() -> void:

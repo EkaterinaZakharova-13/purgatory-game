@@ -15,6 +15,11 @@ run/main_scene="res://MyChanges/main_with_forest.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameSettings="*res://MyChanges/Menu/game_settings.gd"
+PauseMenu="*res://MyChanges/Menu/pause_menu.tscn"
+
 [display]
 
 window/size/viewport_width=1920
@@ -78,8 +83,3 @@ dash={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
-
-[autoload]
-
-GameSettings="*res://MyChanges/Menu/game_settings.gd"
-PauseMenu="*res://MyChanges/Menu/pause_menu.tscn"
