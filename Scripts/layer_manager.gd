@@ -42,7 +42,7 @@ func _depth_y(node: Node2D) -> float:
 	if collision_shape == null or collision_shape.shape == null:
 		return node.global_position.y
 	var local_bounds := collision_shape.shape.get_rect()
-	var transform := collision_shape.global_transform
+	var shape_transform := collision_shape.global_transform
 	var corners := [
 		local_bounds.position,
 		Vector2(local_bounds.end.x, local_bounds.position.y),
@@ -51,7 +51,7 @@ func _depth_y(node: Node2D) -> float:
 	]
 	var depth_y := -INF
 	for corner in corners:
-		depth_y = maxf(depth_y, (transform * corner).y)
+		depth_y = maxf(depth_y, (shape_transform * corner).y)
 	return depth_y
 
 var color_transitioning := false

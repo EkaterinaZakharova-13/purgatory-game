@@ -62,7 +62,7 @@ func _set_damage_outline_strength(value: float) -> void:
 
 func _on_elapsed_timer_timeout() -> void:
 	elapsed_seconds += 1
-	var minutes := int(elapsed_seconds / 60)
+	var minutes := floori(elapsed_seconds / 60.0)
 	var seconds := elapsed_seconds % 60
 	elapsed_time_label.text = "Time: %d:%02d" % [minutes, seconds]
 func _process(delta: float) -> void:

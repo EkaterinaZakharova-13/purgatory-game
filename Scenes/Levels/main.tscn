@@ -174,7 +174,7 @@ shape = SubResource("RectangleShape2D_rtip2")
 offset_top = -64.0
 offset_right = 8.0
 scale = Vector2(8, 1)
-color = Color(0.57571715, 0.52621675, 0.5179543, 1)
+color = Color(0.32335654, 0.28648856, 0.28083926, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="Ground2" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=1557878183]
@@ -191,7 +191,7 @@ shape = SubResource("RectangleShape2D_rtip2")
 offset_top = -64.0
 offset_right = 8.0
 scale = Vector2(8, 1)
-color = Color(0.57571715, 0.52621675, 0.5179543, 1)
+color = Color(0.29398137, 0.25966394, 0.25440675, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="Ground5" type="StaticBody2D" parent="LayerManager/Layer3" unique_id=1839762713]
@@ -365,7 +365,7 @@ shape = SubResource("RectangleShape2D_rtip2")
 offset_top = -64.0
 offset_right = 8.0
 scale = Vector2(8, 1)
-color = Color(0.57571715, 0.52621675, 0.5179543, 1)
+color = Color(0.20094106, 0.17525083, 0.17131725, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="Ground4" type="StaticBody2D" parent="LayerManager/Layer2" unique_id=290481042]
@@ -641,7 +641,7 @@ shape = SubResource("RectangleShape2D_rtip2")
 offset_top = -64.0
 offset_right = 8.0
 scale = Vector2(8, 1)
-color = Color(0.57571715, 0.52621675, 0.5179543, 1)
+color = Color(0.53900033, 0.53900033, 0.53900033, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="ColorRect2" type="ColorRect" parent="LayerManager/Layer1/Ground5" unique_id=25149103]
@@ -665,14 +665,14 @@ shape = SubResource("RectangleShape2D_rtip2")
 offset_top = -64.0
 offset_right = 8.0
 scale = Vector2(8, 1)
-color = Color(0.57571715, 0.52621675, 0.5179543, 1)
+color = Color(0.13473421, 0.115518875, 0.11257743, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="ColorRect2" type="ColorRect" parent="LayerManager/Layer1/Ground" unique_id=2097773507]
 offset_right = 8.0
 offset_bottom = 64.0
 scale = Vector2(8, 1)
-color = Color(0.48668993, 0.43843925, 0.43103063, 1)
+color = Color(0.10829399, 0.0920996, 0.08940723, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="Ground2" type="StaticBody2D" parent="LayerManager/Layer1" unique_id=349929163]
@@ -886,7 +886,7 @@ position = Vector2(0, 70)
 shape = SubResource("EscapeGateCollision")
 
 [node name="EscapeGate" parent="LayerManager/Layer1" unique_id=358938542 instance=ExtResource("7_escape_door")]
-position = Vector2(2697, 552)
+position = Vector2(2697, 520.00006)
 scale = Vector2(1.375, 1.375)
 platform_path = NodePath("../../Layer3/OrbPlatform")
 

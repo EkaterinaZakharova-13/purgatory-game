@@ -76,14 +76,14 @@ func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
 	_push_force_received = false
 	state.linear_velocity = body_velocity
 
-func interact(player: Node2D, orb: Node2D) -> bool:
-	if not _player_is_in_interaction_range(player) or player.global_position.y > global_position.y + 24.0:
+func interact(by_player: Node2D, orb: Node2D) -> bool:
+	if not _player_is_in_interaction_range(by_player) or by_player.global_position.y > global_position.y + 24.0:
 		return false
 	if placed_orb != null or not bool(orb.get("is_active")):
 		return false
 	if bool(orb.get("is_placing")) or bool(orb.get("is_placed")) or bool(orb.get("is_recalling")):
 		return false
-	var player_layer := int(player.get("current_mask"))
+	var player_layer := int(by_player.get("current_mask"))
 	if current_layer != player_layer:
 		if not match_player_layer_on_interact:
 			return false
@@ -132,9 +132,9 @@ func can_shift_with_player(target_layer: int, vertical_offset: float) -> bool:
 	query.collision_mask = 1 << (target_layer - 1)
 	query.margin = 0.0
 	query.exclude = [get_rid()]
-	var player := get_tree().get_first_node_in_group("Player") as CollisionObject2D
-	if player != null:
-		query.exclude.append(player.get_rid())
+	var player_body := get_tree().get_first_node_in_group("Player") as CollisionObject2D
+	if player_body != null:
+		query.exclude.append(player_body.get_rid())
 	return get_world_2d().direct_space_state.intersect_shape(query, 8).is_empty()
 
 func move_with_player(target_layer: int, vertical_offset: float) -> void:
